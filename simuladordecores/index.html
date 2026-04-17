@@ -1,1358 +1,305 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Veloz Studio Pro | IA Design Avançado</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-
-  <style>
-    :root {
-      --primary: #6e0a78;
-      --primary-hover: #8a0c96;
-      --bg: #f4f4f9;
-      --glass: rgba(255,255,255,0.95);
-      --shadow: 0 10px 30px rgba(0,0,0,0.08);
-    }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-    body { 
-      background: linear-gradient(135deg, #f4f4f9 0%, #e8e8f0 100%); 
-      height: 100vh; 
-      display: flex; 
-      flex-direction: column; 
-      overflow: hidden; 
-    }
-
-    header {
-      background: #fff;
-      padding: 1rem 5%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 2px 15px rgba(0,0,0,0.06);
-      z-index: 10;
-    }
-
-    .logo { 
-      font-weight: 700; 
-      color: var(--primary); 
-      font-size: 1.3rem; 
-      letter-spacing: 1.5px;
-      text-shadow: 0 2px 4px rgba(110, 10, 120, 0.1);
-    }
-    
-    #status { 
-      font-weight: 600; 
-      font-size: .95rem; 
-      color: #222;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #27ae60;
-      animation: pulse 2s ease-in-out infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-
-    main {
-      flex: 1;
-      display: grid;
-      grid-template-columns: 1fr 380px;
-      gap: 20px;
-      padding: 20px;
-      overflow: hidden;
-    }
-
-    .workspace {
-      position: relative;
-      background: linear-gradient(145deg, #1a1a1a 0%, #2d2d2d 100%);
-      border-radius: 20px;
-      overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      box-shadow: var(--shadow);
-    }
-
-    .workspace-controls {
-      position: absolute;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 10px;
-      background: rgba(255,255,255,0.95);
-      padding: 10px 15px;
-      border-radius: 50px;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.15);
-      z-index: 5;
-    }
-
-    .workspace-controls button {
-      padding: 8px 16px;
-      border: none;
-      background: #fff;
-      border-radius: 25px;
-      cursor: pointer;
-      font-size: 0.85rem;
-      font-weight: 600;
-      transition: all 0.2s;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
-
-    .workspace-controls button:hover {
-      background: var(--primary);
-      color: white;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(110, 10, 120, 0.3);
-    }
-
-    canvas { 
-      position: absolute; 
-      max-width: 100%; 
-      max-height: 100%; 
-      object-fit: contain;
-      transition: transform 0.1s ease-out;
-    }
-    
-    #canvasTinta { 
-      mix-blend-mode: multiply; 
-      opacity: 0.85; 
-      z-index: 2; 
-      cursor: crosshair; 
-    }
-
-    .panel {
-      background: var(--glass);
-      padding: 25px;
-      border-radius: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-      box-shadow: var(--shadow);
-      overflow-y: auto;
-      overflow-x: hidden;
-    }
-
-    .panel::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    .panel::-webkit-scrollbar-track {
-      background: rgba(0,0,0,0.05);
-      border-radius: 10px;
-    }
-
-    .panel::-webkit-scrollbar-thumb {
-      background: var(--primary);
-      border-radius: 10px;
-    }
-
-    .upload-box {
-      border: 3px dashed #ccc;
-      padding: 30px 20px;
-      border-radius: 15px;
-      text-align: center;
-      cursor: pointer;
-      background: #fff;
-      transition: all 0.3s;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .upload-box::before {
-      content: '📁';
-      font-size: 3rem;
-      display: block;
-      margin-bottom: 10px;
-    }
-
-    .upload-box:hover { 
-      border-color: var(--primary); 
-      background: rgba(110, 10, 120, 0.02);
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    }
-
-    .upload-box.dragging {
-      border-color: var(--primary);
-      background: rgba(110, 10, 120, 0.05);
-      transform: scale(1.02);
-    }
-
-    .ia-card {
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
-      color: white;
-      padding: 20px;
-      border-radius: 15px;
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      box-shadow: 0 5px 20px rgba(110, 10, 120, 0.3);
-      transition: transform 0.2s;
-    }
-
-    .ia-card:hover {
-      transform: translateY(-2px);
-    }
-
-    .color-preview {
-      width: 60px;
-      height: 60px;
-      border-radius: 12px;
-      border: 3px solid rgba(255,255,255,0.9);
-      background: #fff;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-      transition: transform 0.2s;
-    }
-
-    .color-preview:hover {
-      transform: scale(1.05);
-    }
-
-    .section-title {
-      font-size: 0.85rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: #666;
-      margin-top: 10px;
-      padding-bottom: 8px;
-      border-bottom: 2px solid #eee;
-    }
-
-    .btn-group { 
-      display: flex; 
-      gap: 10px; 
-    }
-    
-    button {
-      flex: 1;
-      padding: 12px 16px;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.2s;
-      font-size: 0.9rem;
-      position: relative;
-      overflow: hidden;
-    }
-
-    button::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 0;
-      height: 0;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.3);
-      transform: translate(-50%, -50%);
-      transition: width 0.3s, height 0.3s;
-    }
-
-    button:active::before {
-      width: 300px;
-      height: 300px;
-    }
-
-    button:hover { 
-      transform: translateY(-2px); 
-      box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-    }
-    
-    button:active { 
-      transform: translateY(0); 
-    }
-
-    button:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
-      transform: none !important;
-    }
-
-    .btn-main { 
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%); 
-      color: white; 
-      box-shadow: 0 4px 15px rgba(110, 10, 120, 0.3);
-    }
-
-    .btn-main:hover {
-      box-shadow: 0 6px 20px rgba(110, 10, 120, 0.4);
-    }
-
-    .btn-soft { 
-      background: #fff; 
-      border: 2px solid #e0e0e0;
-      color: #333;
-    }
-
-    .btn-soft:hover {
-      border-color: var(--primary);
-      color: var(--primary);
-    }
-
-    .btn-danger {
-      background: #e74c3c;
-      color: white;
-    }
-
-    .btn-danger:hover {
-      background: #c0392b;
-    }
-
-    .active { 
-      outline: 3px solid var(--primary); 
-      outline-offset: 2px;
-      box-shadow: 0 0 0 6px rgba(110, 10, 120, 0.1);
-    }
-
-    .color-grid { 
-      display: grid; 
-      grid-template-columns: repeat(5, 1fr); 
-      gap: 10px; 
-    }
-    
-    .dot {
-      aspect-ratio: 1;
-      border-radius: 50%;
-      cursor: pointer;
-      border: 3px solid transparent;
-      transition: all 0.2s;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    }
-    
-    .dot:hover {
-      transform: scale(1.1);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-    }
-
-    .dot.selected { 
-      border-color: #000; 
-      transform: scale(1.15); 
-      box-shadow: 0 0 0 4px rgba(0,0,0,0.1);
-    }
-
-    input[type="range"] { 
-      width: 100%; 
-      height: 6px;
-      border-radius: 5px;
-      background: #e0e0e0;
-      outline: none;
-      -webkit-appearance: none;
-    }
-
-    input[type="range"]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      background: var(--primary);
-      cursor: pointer;
-      box-shadow: 0 2px 8px rgba(110, 10, 120, 0.4);
-      transition: all 0.2s;
-    }
-
-    input[type="range"]::-webkit-slider-thumb:hover {
-      transform: scale(1.2);
-      box-shadow: 0 3px 12px rgba(110, 10, 120, 0.6);
-    }
-
-    input[type="range"]::-moz-range-thumb {
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      background: var(--primary);
-      cursor: pointer;
-      border: none;
-      box-shadow: 0 2px 8px rgba(110, 10, 120, 0.4);
-    }
-
-    .mini-row { 
-      display: flex; 
-      justify-content: space-between; 
-      align-items: center;
-      gap: 10px; 
-      font-size: 0.9rem; 
-      color: #555;
-    }
-
-    .mini-row span:last-child {
-      font-weight: 700;
-      color: var(--primary);
-      min-width: 40px;
-      text-align: right;
-    }
-
-    .tooltip {
-      position: relative;
-      display: inline-block;
-    }
-
-    .tooltip .tooltiptext {
-      visibility: hidden;
-      width: 200px;
-      background-color: #333;
-      color: #fff;
-      text-align: center;
-      border-radius: 8px;
-      padding: 8px;
-      position: absolute;
-      z-index: 1;
-      bottom: 125%;
-      left: 50%;
-      margin-left: -100px;
-      opacity: 0;
-      transition: opacity 0.3s;
-      font-size: 0.8rem;
-    }
-
-    .tooltip:hover .tooltiptext {
-      visibility: visible;
-      opacity: 1;
-    }
-
-    .notification {
-      position: fixed;
-      top: 80px;
-      right: 20px;
-      background: white;
-      padding: 15px 20px;
-      border-radius: 12px;
-      box-shadow: 0 5px 25px rgba(0,0,0,0.15);
-      z-index: 1000;
-      animation: slideIn 0.3s ease-out;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      max-width: 350px;
-    }
-
-    .notification.success { border-left: 4px solid #27ae60; }
-    .notification.error { border-left: 4px solid #e74c3c; }
-    .notification.info { border-left: 4px solid #3498db; }
-
-    @keyframes slideIn {
-      from {
-        transform: translateX(400px);
-        opacity: 0;
-      }
-      to {
-        transform: translateX(0);
-        opacity: 1;
-      }
-    }
-
-    @keyframes slideOut {
-      from {
-        transform: translateX(0);
-        opacity: 1;
-      }
-      to {
-        transform: translateX(400px);
-        opacity: 0;
-      }
-    }
-
-    .loader {
-      border: 3px solid #f3f3f3;
-      border-top: 3px solid var(--primary);
-      border-radius: 50%;
-      width: 20px;
-      height: 20px;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    /* Responsividade Mobile */
-    @media (max-width: 768px) {
-      main {
-        grid-template-columns: 1fr;
-        grid-template-rows: 1fr auto;
-      }
-
-      .panel {
-        max-height: 40vh;
-      }
-
-      .workspace-controls {
-        bottom: 10px;
-        padding: 8px 12px;
-      }
-
-      .workspace-controls button {
-        padding: 6px 12px;
-        font-size: 0.75rem;
-      }
-    }
-
-    /* Modo de carregamento */
-    .loading-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0,0,0,0.7);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 100;
-      border-radius: 20px;
-    }
-
-    .loading-spinner {
-      border: 5px solid rgba(255,255,255,0.3);
-      border-top: 5px solid white;
-      border-radius: 50%;
-      width: 60px;
-      height: 60px;
-      animation: spin 1s linear infinite;
-    }
-  </style>
+  <meta charset="UTF-8">
+  <title>Tintas Veloz | Química e Solventes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/assets/css/style.css"> 
+  <link rel="stylesheet" href="/simuladordecores/simulador.css">
 </head>
-
 <body>
-<header>
-  <div class="logo">VELOZ <span style="font-weight:400">STUDIO PRO</span></div>
-  <div id="status">
-    <span class="status-dot"></span>
-    <span>IA Pronta</span>
-  </div>
-</header>
-
-<main>
-  <div class="workspace" id="container">
-    <canvas id="canvasFundo"></canvas>
-    <canvas id="canvasTinta"></canvas>
-    
-    <div class="workspace-controls">
-      <button id="btnZoomIn" title="Zoom In (Ctrl++)">🔍+</button>
-      <button id="btnZoomOut" title="Zoom Out (Ctrl+-)">🔍-</button>
-      <button id="btnResetZoom" title="Resetar Zoom (Ctrl+0)">↺</button>
-      <button id="btnClear" title="Limpar Tudo (Ctrl+L)">🗑️</button>
+  <header>
+    <div class="container">
+      <div class="header-top">
+        <img src="/assets/img/width_550.png" class="logo" alt="Veloz">
+        <div class="search-social">
+          <div class="search-bar">
+            <input type="text" id="inputBusca" placeholder="Pesquisar produtos...">
+          </div>
+            <div class="social-links">
+          <span>Siga-nos</span>
+          <a href="https://www.instagram.com/tintasveloz"><img src="/assets/svg/instagram-icon-svgrepo-com.svg" class="social-icon" alt="Instagram"></a>
+          <a href="https://www.facebook.com/veloztintas"><img src="https://www.svgrepo.com/show/521654/facebook.svg" class="social-icon" alt="Facebook"></a>
+        </div>
+        </div>
+        <button class="hamburger" id="openMenu">☰</button>
+      </div> 
+    </div> 
+    <div class="branco"> 
+      <nav class="nav-desktop">
+        <a class="here" href="/index.html">Home</a> 
+        <a href="#">História</a>
+        <a  href="/produtos/index.html">Produtos</a>
+        <a href="#">Certificações</a>
+        <a href="#">Downloads</a>
+        <a href="#">Contato</a>
+        <a href="/lojaparceira/index.html">Loja parceira</a>
+      </nav>
     </div>
   </div>
-
-  <aside class="panel">
-    <label class="upload-box" id="uploadBox">
-      <strong>Clique ou Arraste para Carregar Foto</strong><br>
-      <small style="opacity:.7">PNG, JPG, WEBP (máx. 10MB)</small>
-      <input type="file" id="upload" hidden accept="image/*" />
-    </label>
-
-    <div class="ia-card">
-      <div id="iaColor" class="color-preview"></div>
-      <div style="flex: 1;">
-        <small style="opacity:.9">IA SUGERIU:</small>
-        <div id="hexLabel" style="font-weight:700; font-size: 1.1rem;">#------</div>
-        <small style="opacity:.7; font-size: 0.75rem;">Cor com melhor contraste</small>
-      </div>
-    </div>
-
-    <div class="section-title">⚙️ Controles</div>
-
-    <div class="btn-group">
-      <button class="btn-soft tooltip" id="btnUndo" title="Desfazer">
-        ↩ Voltar
-        <span class="tooltiptext">Desfazer última ação (Ctrl+Z)</span>
-      </button>
-      <button class="btn-soft tooltip" id="btnRedo" title="Refazer">
-        ↪ Avançar
-        <span class="tooltiptext">Refazer ação (Ctrl+Y)</span>
-      </button>
-    </div>
-
-    <div class="btn-group">
-      <button id="btnPintar" class="btn-main active">🎨 Pintar</button>
-      <button id="btnApagar" class="btn-soft">🧹 Borracha</button>
-    </div>
-
-    <div class="mini-row">
-      <span>Tamanho da Ferramenta</span>
-      <span id="sizeLabel">40px</span>
-    </div>
-    <input type="range" id="size" min="5" max="150" value="40">
-
-    <div class="mini-row">
-      <span>Tolerância de Preenchimento</span>
-      <span id="toleranceLabel">60</span>
-    </div>
-    <input type="range" id="tolerance" min="10" max="150" value="60">
-
-    <div class="section-title">🎨 Paleta de Cores</div>
-
-    <div class="mini-row">
-      <span style="flex: 1;">Selecione uma cor</span>
-      <button class="btn-soft" id="btnRecolor" style="flex:0; padding:8px 16px; font-size: 0.85rem;">🔄 Recolorir</button>
-    </div>
-
-    <div class="color-grid" id="paleta">
-      <div class="dot selected" style="background:#6e0a78" data-hex="#6e0a78" title="Roxo Veloz"></div>
-      <div class="dot" style="background:#2c3e50" data-hex="#2c3e50" title="Azul Escuro"></div>
-      <div class="dot" style="background:#27ae60" data-hex="#27ae60" title="Verde"></div>
-      <div class="dot" style="background:#e67e22" data-hex="#e67e22" title="Laranja"></div>
-      <div class="dot" style="background:#34495e" data-hex="#34495e" title="Cinza Escuro"></div>
-      <div class="dot" style="background:#1abc9c" data-hex="#1abc9c" title="Turquesa"></div>
-      <div class="dot" style="background:#e74c3c" data-hex="#e74c3c" title="Vermelho"></div>
-      <div class="dot" style="background:#8e44ad" data-hex="#8e44ad" title="Roxo"></div>
-      <div class="dot" style="background:#f1c40f" data-hex="#f1c40f" title="Amarelo"></div>
-      <div class="dot" style="background:#111111" data-hex="#111111" title="Preto"></div>
-      <div class="dot" style="background:#ffffff; border: 2px solid #ddd;" data-hex="#ffffff" title="Branco"></div>
-      <div class="dot" style="background:#95a5a6" data-hex="#95a5a6" title="Cinza"></div>
-      <div class="dot" style="background:#d35400" data-hex="#d35400" title="Laranja Escuro"></div>
-      <div class="dot" style="background:#c0392b" data-hex="#c0392b" title="Vermelho Escuro"></div>
-      <div class="dot" style="background:#16a085" data-hex="#16a085" title="Verde Água"></div>
-    </div>
-
-    <div class="section-title">💾 Exportar</div>
-
-    <button class="btn-main" id="btnDownload">⬇️ Download Resultado (PNG)</button>
-    <button class="btn-soft" id="btnDownloadJPG">⬇️ Download como JPG</button>
+  </header>
+  <aside class="menu-mobile" id="menuMobile">
+   
+    <nav class="nav-mobile">
+      <a href="/index.html">Home</a>
+      <a href="#">História</a>
+      <a href="/produtos/index.html">Produtos</a>
+      <a href="#">Certificações</a>
+      <a href="#">Downloads</a>
+      <a href="#">Contato</a>
+      <a href="/lojaparceira/index.html">Loja parceira</a>
+    </nav>
   </aside>
+  <div class="overlay" id="overlay"></div>
+<main class="prisma-page">
+  <div class="prisma-onboarding" style="max-width: 1000px; margin: 0 auto 50px; padding: 0 20px;">
+    
+    <div class="concept-card" style="background: #fff; padding: 40px; border-radius: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.03); margin-bottom: 30px; border-bottom: 4px solid var(--roxo-veloz);">
+        <span class="badge" style="background: #f0ebff; color: var(--roxo-veloz); padding: 6px 16px; border-radius: 50px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">Tecnologia de Ponta</span>
+        <h2 style="font-size: 32px; font-weight: 800; color: #1a1a1a; margin: 15px 0; letter-spacing: -1px;">O que é o Veloz Prisma?</h2>
+        <p style="font-size: 17px; color: #555; line-height: 1.7; max-width: 850px;">
+            O <strong>Veloz Prisma</strong> é a nossa ferramenta de inteligência visual que elimina as dúvidas na hora de reformar. Ele traduz as cores reais do nosso catálogo para comandos técnicos (prompts) que as IAs entendem perfeitamente. Assim, você visualiza o resultado final com fidelidade absoluta de tons, luzes e sombras antes de abrir a primeira lata de tinta.
+        </p>
+    </div>
+
+    <div class="how-to-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px;">
+        
+        <div class="step-item" style="background: #fdfdfd; padding: 25px; border-radius: 24px; border: 1px solid #eee; transition: 0.3s;">
+            <div style="width: 40px; height: 40px; background: var(--roxo-veloz); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; margin-bottom: 15px;">1</div>
+            <h4 style="font-weight: 700; margin-bottom: 10px; color: #1a1a1a;">Configure</h4>
+            <p style="font-size: 14px; color: #777; line-height: 1.5;">Selecione a área (parede, piso ou telhado) e escolha a cor desejada.</p>
+        </div>
+
+        <div class="step-item" style="background: #fdfdfd; padding: 25px; border-radius: 24px; border: 1px solid #eee; transition: 0.3s;">
+            <div style="width: 40px; height: 40px; background: var(--roxo-veloz); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; margin-bottom: 15px;">2</div>
+            <h4 style="font-weight: 700; margin-bottom: 10px; color: #1a1a1a;">Gere o Prompt</h4>
+            <p style="font-size: 14px; color: #777; line-height: 1.5;">O sistema cria o comando técnico exato com códigos HEX e RGB oficiais.</p>
+        </div>
+
+        <div class="step-item" style="background: #fdfdfd; padding: 25px; border-radius: 24px; border: 1px solid #eee; transition: 0.3s;">
+            <div style="width: 40px; height: 40px; background: var(--roxo-veloz); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; margin-bottom: 15px;">3</div>
+            <h4 style="font-weight: 700; margin-bottom: 10px; color: #1a1a1a;">Copie e Cole</h4>
+            <p style="font-size: 14px; color: #777; line-height: 1.5;">Clique em copiar, abra o Gemini no botão e envie junto com uma foto do seu ambiente.</p>
+        </div>
+
+    </div>
+</div>
+    <section class="prisma-hero-header">
+        <div class="container">
+            <span class="badge">IA & Design</span>
+            <h1>Veloz <span class="text-purple">Prisma</span></h1>
+            <p>A tecnologia que transforma sua dúvida em decisão. Use a inteligência artificial para visualizar as <strong>Tintas Veloz</strong> no seu ambiente real antes mesmo de abrir a lata.</p>
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="prisma-card-main">
+            
+            <div class="prisma-config">
+                <div class="config-step">
+                    <span class="step-tag">01. Onde vamos aplicar?</span>
+                    <div class="area-selector-modern">
+                        <button class="area-card active" onclick="setArea('Parede', this, 'https://s2.glbimg.com/rYVPpm8iHRRGsqziuHgyCyGH-U0=/620x455/e.glbimg.com/og/ed/f/original/2015/12/10/quarto-arquiteta-andrea-murao-roxo-cabeceira-patchwork.jpg')">
+                            <div class="area-img" style="background-image: url('https://s2.glbimg.com/rYVPpm8iHRRGsqziuHgyCyGH-U0=/620x455/e.glbimg.com/og/ed/f/original/2015/12/10/quarto-arquiteta-andrea-murao-roxo-cabeceira-patchwork.jpg')"></div>
+                            <span>Parede</span>
+                        </button>
+                        <button class="area-card" onclick="setArea('Telhado', this, 'https://api.aecweb.com.br/tematico/img_figuras/telha-ceramica.webp')">
+                            <div class="area-img" style="background-image: url('https://api.aecweb.com.br/tematico/img_figuras/telha-ceramica.webp')"></div>
+                            <span>Telhado</span>
+                        </button>
+                        <button class="area-card" onclick="setArea('Piso', this, 'https://altipisos.com.br/wp-content/uploads/2022/05/Artboard-1.png')">
+                            <div class="area-img" style="background-image: url('https://altipisos.com.br/wp-content/uploads/2022/05/Artboard-1.png')"></div>
+                            <span>Piso</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="config-step">
+                    <span class="step-tag">02. Escolha sua tonalidade</span>
+                    <div class="modern-colors-grid">
+                        <div id="colorsContainer" class="colors-wrapper"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="prisma-view">
+                <div class="preview-stage">
+                    <div id="dynamicImage" class="main-preview-img" style="background-image: url('https://i.postimg.cc/yBt5GN0J/5a5bd2f7df9f69ec5b60de5e371cca7d.jpg');">
+                        <div class="color-overlay-preview" id="colorOverlay"></div>
+                        <div class="preview-info">
+                            <h4 id="displayAreaName">Parede</h4>
+                            <p id="displayColorName">Branco Polar</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="prompt-result-area">
+                    <div class="prompt-header">
+                        <span class="ai-status">Prompt Inteligente Gerado</span>
+                    </div>
+                    <div class="prompt-box" id="promptText">
+                        Selecione as opções ao lado...
+                    </div>
+                    <div class="prompt-actions">
+                        <button class="btn-action-veloz btn-copy" onclick="copyPrompt()">Copiar Prompt</button>
+                        <button class="btn-action-veloz btn-ai" onclick="openGemini()">Usar IA</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <section class="guarantee-veloz">
+        <div class="container">
+            <div class="guarantee-card">
+                <h3>Certeza absoluta? Só com a Veloz.</h3>
+                <p>Se você pintar e não gostar, a Tintas Veloz troca a tinta para você.</p>
+            </div>
+        </div>
+    </section>
 </main>
 
-<script>
-  // ==================== ELEMENTOS DO DOM ====================
-  const container = document.getElementById('container');
-  const cFundo = document.getElementById('canvasFundo');
-  const cTinta = document.getElementById('canvasTinta');
+<script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+<df-messenger
+  chat-icon="https://i.postimg.cc/nhp6bzZd/Copilot-20250829-130353.png"
+  intent="WELCOME"
+  chat-title="TINA"
+  agent-id="8181e44e-af3a-465d-b5bb-27bd4a63d906"
+  language-code="pt-br"
+  wait-open	
+></df-messenger>
+<style>
+  df-messenger {
+   --df-messenger-bot-message: #3affff;
+   --df-messenger-button-titlebar-color: #e0eff1;
+   --df-messenger-bot-message: #3affff;
+   --df-messenger-chat-background-color: #fafafa;
+   --df-messenger-font-color: rgb(0, 0, 0);
+   --df-messenger-send-icon: #000000;
+   --df-messenger-user-message: #00ff62;
+   --df-messenger-button-titlebar-font-color:#000000;	 /* Color do titulo*/
+  }
 
-  const ctxF = cFundo.getContext('2d', { willReadFrequently: true });
-  const ctxT = cTinta.getContext('2d', { willReadFrequently: true });
+/* Mover o widget do Dialogflow */
+df-messenger {
+  position: fixed !important;
+  bottom: 80px !important; /* sobe o chat para não ficar colado no nav */
+  right: 50px !important;
+  z-index: 9999 !important; /* garante que fique acima do conteúdo */
+}
 
-  const statusEl = document.getElementById('status');
-  const iaColorEl = document.getElementById('iaColor');
-  const hexLabelEl = document.getElementById('hexLabel');
+/* Ajustar a janela de chat aberta */
+df-messenger chat-wrapper {
+  bottom: 80px !important;
+}
 
-  const uploadEl = document.getElementById('upload');
-  const uploadBox = document.getElementById('uploadBox');
-  const sizeEl = document.getElementById('size');
-  const sizeLabelEl = document.getElementById('sizeLabel');
-  const toleranceEl = document.getElementById('tolerance');
-  const toleranceLabelEl = document.getElementById('toleranceLabel');
+@media (max-width: 768px) {
+  df-messenger {
+    bottom: 80px !important; /* sobe o chat no mobile */
+    right: 15px !important;
+  }
+}
 
-  const btnUndo = document.getElementById('btnUndo');
-  const btnRedo = document.getElementById('btnRedo');
-  const btnPintar = document.getElementById('btnPintar');
-  const btnApagar = document.getElementById('btnApagar');
-  const btnDownload = document.getElementById('btnDownload');
-  const btnDownloadJPG = document.getElementById('btnDownloadJPG');
-  const btnRecolor = document.getElementById('btnRecolor');
-  const btnZoomIn = document.getElementById('btnZoomIn');
-  const btnZoomOut = document.getElementById('btnZoomOut');
-  const btnResetZoom = document.getElementById('btnResetZoom');
-  const btnClear = document.getElementById('btnClear');
+</style>
+<footer class="footer">
+ <!-- FAIXA DEGRADÊ -->
+  <div class="footer-strip"></div>
 
-  // ==================== VARIÁVEIS GLOBAIS ====================
-  let img = new Image();
-  let corAtual = "#6e0a78";
-  let modo = "pintar";
-  let tolerance = 60;
+  <!-- CONTEÚDO PRINCIPAL -->
+  <div class="footer-main">
 
-  // Histórico com limite de memória
-  let history = [];
-  let step = -1;
-  const MAX_HISTORY = 50;
+    <!-- COLUNA 1 - LOGO -->
+    <div class="footer-col footer-col-logo">
+      <img class="footer-logo" src="/assets/img/width_550.png" alt="Logo Veloz">
 
-  let baseImageData = null;
-  let drawing = false;
-  let lastEraseSave = 0;
+      <p class="footer-text">
+        Veloz Química Derivados de Petróleo e Solventes Ltda.
+        <br>
+        Av. Getúlio Vargas, s/n<br>
+        CNPJ: 04.051.523/0001-18 - I.E: 15 213765-3 <br>
+        Quim. Resp: Karine Cardoso C. Pastana <br>
+        CR!. 06201025 - 6ª Região
+      </p>
+    </div>
 
-  // Zoom e Pan
-  let scale = 1;
-  let translateX = 0;
-  let translateY = 0;
-  let isPanning = false;
-  let startPanX = 0;
-  let startPanY = 0;
+    <!-- COLUNA 2 - SELOS / REDES -->
+    <div class="footer-col footer-col-selos">
 
-  // ==================== NOTIFICAÇÕES ====================
-  function showNotification(message, type = 'info') {
-    const notification = document.createElement('div');
-    notification.className = `notification ${type}`;
-    
-    const icon = type === 'success' ? '✓' : type === 'error' ? '✗' : 'ℹ';
-    notification.innerHTML = `
-      <div style="font-size: 1.5rem;">${icon}</div>
-      <div style="flex: 1;">
-        <strong>${type === 'success' ? 'Sucesso' : type === 'error' ? 'Erro' : 'Info'}</strong>
-        <div style="font-size: 0.85rem; opacity: 0.9;">${message}</div>
+      <div class="selos-top">
+     <img src="https://i.postimg.cc/RVb2DmtT/Isso-9001.png" alt="">
+      <img class="selo-quadrado" src="https://i.postimg.cc/Zn5DwsKX/SELO-ABRAFATI.png" alt="">
+ 
+
       </div>
-    `;
-    
-    document.body.appendChild(notification);
-    
-    setTimeout(() => {
-      notification.style.animation = 'slideOut 0.3s ease-out';
-      setTimeout(() => notification.remove(), 300);
-    }, 3000);
-  }
+        <div class="selos-middle">
+  <img src="selo-meio.png" alt="">
+
+  <div class="social-icons">
+    <a href="https://www.instagram.com/veloztintas" aria-label="Instagram">
+      <img
+        src="https://cdn.simpleicons.org/instagram/000"
+        class="footer-social"
+        alt="Instagram">
+    </a>
+
+    <a href="https://www.facebook.com/veloztintas" aria-label="Facebook">
+      <img
+        src="https://cdn.simpleicons.org/facebook/000"
+        class="footer-social"
+        alt="Facebook">
+    </a>
+  </div>
+  <img src="https://i.postimg.cc/XJwjmcX9/nopara.png" alt="">
+  <br>
+    <img class="ok" src="https://i.postimg.cc/3RVnZ8Vx/SAC-Veloz.png" alt="">
+</div>
 
-  // ==================== LOADING OVERLAY ====================
-  function showLoading() {
-    const overlay = document.createElement('div');
-    overlay.className = 'loading-overlay';
-    overlay.id = 'loadingOverlay';
-    overlay.innerHTML = '<div class="loading-spinner"></div>';
-    container.appendChild(overlay);
-  }
-
-  function hideLoading() {
-    const overlay = document.getElementById('loadingOverlay');
-    if (overlay) overlay.remove();
-  }
-
-  // ==================== STATUS ====================
-  function setStatus(txt, isProcessing = false) { 
-    const dot = statusEl.querySelector('.status-dot');
-    const span = statusEl.querySelector('span:last-child');
-    
-    span.textContent = txt;
-    
-    if (isProcessing) {
-      dot.style.background = '#f39c12';
-      dot.style.animation = 'pulse 0.5s ease-in-out infinite';
-    } else {
-      dot.style.background = '#27ae60';
-      dot.style.animation = 'pulse 2s ease-in-out infinite';
-    }
-  }
-
-  // ==================== VALIDAÇÃO DE ARQUIVO ====================
-  function validateFile(file) {
-    const validTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'];
-    const maxSize = 10 * 1024 * 1024; // 10MB
-
-    if (!validTypes.includes(file.type)) {
-      showNotification('Formato de arquivo inválido. Use PNG, JPG ou WEBP.', 'error');
-      return false;
-    }
-
-    if (file.size > maxSize) {
-      showNotification('Arquivo muito grande. Tamanho máximo: 10MB.', 'error');
-      return false;
-    }
-
-    return true;
-  }
-
-  // ==================== REDIMENSIONAMENTO ====================
-  function resizeToFitImage() {
-    const w = container.clientWidth;
-    const h = container.clientHeight;
-
-    const ratio = img.width / img.height;
-    let cw = w;
-    let ch = Math.round(cw / ratio);
-
-    if (ch > h) {
-      ch = h;
-      cw = Math.round(ch * ratio);
-    }
-
-    cFundo.width = cTinta.width = cw;
-    cFundo.height = cTinta.height = ch;
-
-    ctxF.clearRect(0, 0, cw, ch);
-    ctxT.clearRect(0, 0, cw, ch);
-
-    ctxF.drawImage(img, 0, 0, cw, ch);
-    baseImageData = ctxF.getImageData(0, 0, cw, ch);
-
-    resetZoom();
-    saveHistory(true);
-  }
-
-  // ==================== HISTÓRICO ====================
-  function saveHistory(force = false) {
-    if (!force && (!cTinta.width || !cTinta.height)) return;
-
-    step++;
-    if (step < history.length) history.length = step;
-
-    const snap = ctxT.getImageData(0, 0, cTinta.width, cTinta.height);
-    history.push(snap);
-
-    // Limita histórico para evitar consumo excessivo de memória
-    if (history.length > MAX_HISTORY) {
-      history.shift();
-      step--;
-    }
-
-    updateUndoRedo();
-  }
-
-  function updateUndoRedo() {
-    btnUndo.disabled = step <= 0;
-    btnRedo.disabled = step >= history.length - 1;
-  }
-
-  function restoreHistory(index) {
-    if (!history[index]) return;
-    ctxT.putImageData(history[index], 0, 0);
-    updateUndoRedo();
-  }
-
-  function undo() {
-    if (step > 0) {
-      step--;
-      restoreHistory(step);
-      showNotification('Ação desfeita', 'info');
-    }
-  }
-
-  function redo() {
-    if (step < history.length - 1) {
-      step++;
-      restoreHistory(step);
-      showNotification('Ação refeita', 'info');
-    }
-  }
-
-  // ==================== COORDENADAS DO CANVAS ====================
-  function getCanvasPoint(evt) {
-    const rect = cTinta.getBoundingClientRect();
-    const x = Math.floor((evt.clientX - rect.left) * (cTinta.width / rect.width));
-    const y = Math.floor((evt.clientY - rect.top) * (cTinta.height / rect.height));
-    return { x, y };
-  }
-
-  // ==================== IA MELHORADA ====================
-  function processarIA() {
-    setStatus("Processando IA...", true);
-    showLoading();
-
-    // Simula processamento assíncrono
-    setTimeout(() => {
-      try {
-        const w = cFundo.width;
-        const h = cFundo.height;
-
-        // Analisa múltiplos pontos para melhor sugestão
-        const samples = [
-          { x: Math.floor(w * 0.5), y: Math.floor(h * 0.5) },
-          { x: Math.floor(w * 0.3), y: Math.floor(h * 0.3) },
-          { x: Math.floor(w * 0.7), y: Math.floor(h * 0.7) },
-        ];
-
-        let avgR = 0, avgG = 0, avgB = 0;
-
-        samples.forEach(point => {
-          const pix = ctxF.getImageData(point.x, point.y, 1, 1).data;
-          avgR += pix[0];
-          avgG += pix[1];
-          avgB += pix[2];
-        });
-
-        avgR = Math.floor(avgR / samples.length);
-        avgG = Math.floor(avgG / samples.length);
-        avgB = Math.floor(avgB / samples.length);
-
-        // Calcula luminosidade
-        const luminosity = 0.299 * avgR + 0.587 * avgG + 0.114 * avgB;
-
-        // Sugere cor com bom contraste
-        let suggestedColor;
-        if (luminosity > 128) {
-          // Imagem clara -> cor escura
-          suggestedColor = "#2c3e50";
-        } else {
-          // Imagem escura -> cor clara
-          suggestedColor = "#e74c3c";
-        }
-
-        corAtual = suggestedColor;
-        iaColorEl.style.background = suggestedColor;
-        hexLabelEl.textContent = suggestedColor.toUpperCase();
-
-        // Seleciona a cor na paleta
-        document.querySelectorAll(".dot").forEach(d => {
-          if (d.dataset.hex.toLowerCase() === suggestedColor.toLowerCase()) {
-            document.querySelectorAll(".dot").forEach(el => el.classList.remove("selected"));
-            d.classList.add("selected");
-          }
-        });
-
-        setStatus("IA Pronta");
-        hideLoading();
-        showNotification('IA analisou a imagem e sugeriu a melhor cor!', 'success');
-
-        // Auto paint no centro
-        floodFillFast(Math.floor(w / 2), Math.floor(h / 2), tolerance);
-        saveHistory(true);
-      } catch (error) {
-        console.error('Erro ao processar IA:', error);
-        setStatus("Erro na IA");
-        hideLoading();
-        showNotification('Erro ao processar IA. Tente novamente.', 'error');
-      }
-    }, 500);
-  }
-
-  // ==================== FLOOD FILL OTIMIZADO ====================
-  function floodFillFast(x, y, tol) {
-    if (!baseImageData) return;
-
-    const w = baseImageData.width;
-    const h = baseImageData.height;
-    const data = baseImageData.data;
-
-    if (x < 0 || y < 0 || x >= w || y >= h) return;
-
-    const start = (y * w + x) * 4;
-    const tr = data[start], tg = data[start + 1], tb = data[start + 2];
-
-    const visited = new Uint8Array(w * h);
-    const stack = [x, y];
-
-    const overlay = ctxT.getImageData(0, 0, w, h);
-    const od = overlay.data;
-
-    const [pr, pg, pb] = hexToRgb(corAtual);
-
-    let pixelsPainted = 0;
-
-    while (stack.length) {
-      const cy = stack.pop();
-      const cx = stack.pop();
-
-      if (cx < 0 || cy < 0 || cx >= w || cy >= h) continue;
-
-      const idx = cy * w + cx;
-      if (visited[idx]) continue;
-      visited[idx] = 1;
-
-      const i = idx * 4;
-      const diff = Math.abs(data[i] - tr) + Math.abs(data[i + 1] - tg) + Math.abs(data[i + 2] - tb);
-
-      if (diff <= tol) {
-        od[i] = pr;
-        od[i + 1] = pg;
-        od[i + 2] = pb;
-        od[i + 3] = 255;
-
-        pixelsPainted++;
-
-        stack.push(cx + 1, cy);
-        stack.push(cx - 1, cy);
-        stack.push(cx, cy + 1);
-        stack.push(cx, cy - 1);
-      }
-    }
-
-    ctxT.putImageData(overlay, 0, 0);
-
-    if (pixelsPainted > 0) {
-      showNotification(`${pixelsPainted} pixels pintados!`, 'success');
-    } else {
-      showNotification('Nenhum pixel foi pintado. Ajuste a tolerância.', 'info');
-    }
-  }
-
-  function hexToRgb(hex) {
-    const clean = hex.replace("#", "").trim();
-    const bigint = parseInt(clean, 16);
-    const r = (bigint >> 16) & 255;
-    const g = (bigint >> 8) & 255;
-    const b = bigint & 255;
-    return [r, g, b];
-  }
-
-  // ==================== BORRACHA ====================
-  function eraseAt(x, y) {
-    ctxT.save();
-    ctxT.globalCompositeOperation = "destination-out";
-    ctxT.beginPath();
-    ctxT.arc(x, y, Number(sizeEl.value), 0, Math.PI * 2);
-    ctxT.fill();
-    ctxT.restore();
-  }
-
-  function setModo(m) {
-    modo = m;
-    btnPintar.classList.toggle("active", m === "pintar");
-    btnApagar.classList.toggle("active", m === "apagar");
-    btnPintar.classList.toggle("btn-main", m === "pintar");
-    btnPintar.classList.toggle("btn-soft", m !== "pintar");
-    btnApagar.classList.toggle("btn-main", m === "apagar");
-    btnApagar.classList.toggle("btn-soft", m !== "apagar");
-    cTinta.style.cursor = m === "pintar" ? "crosshair" : "cell";
-  }
-
-  // ==================== RECOLORIR ====================
-  function recolorOverlay() {
-    if (!cTinta.width) {
-      showNotification('Carregue uma imagem primeiro!', 'error');
-      return;
-    }
-
-    const w = cTinta.width, h = cTinta.height;
-    const overlay = ctxT.getImageData(0, 0, w, h);
-    const d = overlay.data;
-    const [pr, pg, pb] = hexToRgb(corAtual);
-
-    let pixelsRecolored = 0;
-
-    for (let i = 0; i < d.length; i += 4) {
-      if (d[i + 3] > 0) {
-        d[i] = pr;
-        d[i + 1] = pg;
-        d[i + 2] = pb;
-        pixelsRecolored++;
-      }
-    }
-
-    ctxT.putImageData(overlay, 0, 0);
-    saveHistory(true);
-
-    if (pixelsRecolored > 0) {
-      showNotification(`Recolorido com sucesso! (${pixelsRecolored} pixels)`, 'success');
-    } else {
-      showNotification('Nenhuma área pintada para recolorir.', 'info');
-    }
-  }
-
-  // ==================== LIMPAR TUDO ====================
-  function clearAll() {
-    if (!cTinta.width) return;
-
-    if (confirm('Tem certeza que deseja limpar toda a pintura?')) {
-      ctxT.clearRect(0, 0, cTinta.width, cTinta.height);
-      saveHistory(true);
-      showNotification('Pintura limpa!', 'success');
-    }
-  }
-
-  // ==================== ZOOM E PAN ====================
-  function applyTransform() {
-    cFundo.style.transform = `scale(${scale}) translate(${translateX}px, ${translateY}px)`;
-    cTinta.style.transform = `scale(${scale}) translate(${translateX}px, ${translateY}px)`;
-  }
-
-  function zoomIn() {
-    scale = Math.min(scale + 0.2, 3);
-    applyTransform();
-    showNotification(`Zoom: ${Math.round(scale * 100)}%`, 'info');
-  }
-
-  function zoomOut() {
-    scale = Math.max(scale - 0.2, 0.5);
-    applyTransform();
-    showNotification(`Zoom: ${Math.round(scale * 100)}%`, 'info');
-  }
-
-  function resetZoom() {
-    scale = 1;
-    translateX = 0;
-    translateY = 0;
-    applyTransform();
-    showNotification('Zoom resetado', 'info');
-  }
-
-  // ==================== DOWNLOAD ====================
-  function downloadFinal(format = 'png') {
-    if (!cFundo.width) {
-      showNotification('Carregue uma imagem primeiro!', 'error');
-      return;
-    }
-
-    try {
-      const final = document.createElement("canvas");
-      final.width = cFundo.width;
-      final.height = cFundo.height;
-      const fCtx = final.getContext("2d");
-
-      // Fundo branco para JPG
-      if (format === 'jpg') {
-        fCtx.fillStyle = '#ffffff';
-        fCtx.fillRect(0, 0, final.width, final.height);
-      }
-
-      fCtx.drawImage(cFundo, 0, 0);
-      fCtx.globalCompositeOperation = "multiply";
-      fCtx.globalAlpha = 0.85;
-      fCtx.drawImage(cTinta, 0, 0);
-
-      const link = document.createElement("a");
-      link.download = `veloz-studio-${Date.now()}.${format}`;
-      link.href = final.toDataURL(`image/${format}`, 0.95);
-      link.click();
-
-      showNotification(`Imagem baixada com sucesso! (${format.toUpperCase()})`, 'success');
-    } catch (error) {
-      console.error('Erro ao fazer download:', error);
-      showNotification('Erro ao fazer download. Tente novamente.', 'error');
-    }
-  }
-
-  // ==================== DRAG AND DROP ====================
-  uploadBox.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    uploadBox.classList.add('dragging');
-  });
-
-  uploadBox.addEventListener('dragleave', () => {
-    uploadBox.classList.remove('dragging');
-  });
-
-  uploadBox.addEventListener('drop', (e) => {
-    e.preventDefault();
-    uploadBox.classList.remove('dragging');
-    
-    const file = e.dataTransfer.files[0];
-    if (file && validateFile(file)) {
-      loadImageFile(file);
-    }
-  });
-
-  // ==================== CARREGAR IMAGEM ====================
-  function loadImageFile(file) {
-    const reader = new FileReader();
-    
-    reader.onload = (event) => {
-      img.onload = () => {
-        resizeToFitImage();
-        history = [];
-        step = -1;
-        saveHistory(true);
-        processarIA();
-        showNotification('Imagem carregada com sucesso!', 'success');
-      };
       
-      img.onerror = () => {
-        showNotification('Erro ao carregar imagem. Tente outro arquivo.', 'error');
-      };
-      
-      img.src = event.target.result;
-    };
-    
-    reader.onerror = () => {
-      showNotification('Erro ao ler arquivo.', 'error');
-    };
-    
-    reader.readAsDataURL(file);
-  }
 
-  // ==================== EVENTOS ====================
-  uploadEl.addEventListener("change", (e) => {
-    const file = e.target.files?.[0];
-    if (file && validateFile(file)) {
-      loadImageFile(file);
-    }
-  });
+    </div>
 
-  sizeEl.addEventListener("input", () => {
-    sizeLabelEl.textContent = sizeEl.value + 'px';
-  });
+    <!-- COLUNA 3 - MENU -->
+    <div class="footer-col footer-col-menu">
 
-  toleranceEl.addEventListener("input", () => {
-    tolerance = Number(toleranceEl.value);
-    toleranceLabelEl.textContent = tolerance;
-  });
+      <div class="menu-col">
+        <h4>Empresa</h4>
+        <ul>
+          <li><a href="">História</a></li>
+          <li>Produtos</li>
+          <li>Certificações</li>
+          <li>Download</li>
+        </ul>
+      </div>
 
-  // Eventos de mouse para desenho
-  cTinta.addEventListener("mousedown", (e) => {
-    if (!cTinta.width) return;
+      <div class="menu-col">
+        <h4>Contato</h4>
+        <ul>
+          <li>Fale conosco</li>
+          <li>Marketing</li>
+          <li>Comercial</li>
+          <li>Trabalhe conosco</li>
+        </ul>
+      </div>
 
-    const { x, y } = getCanvasPoint(e);
+      <div class="menu-col">
+        <h4>Serviços</h4>
+        <ul>
+          <li>Área do Pintor</li>
+          <li>Loja parceira</li>
+          <li>Cálculo de tinta</li>
+          <li>Escolha a cor</li>
+        </ul>
+      </div>
 
-    if (modo === "pintar") {
-      saveHistory(true);
-      floodFillFast(x, y, tolerance);
-      saveHistory(true);
-    } else {
-      drawing = true;
-      saveHistory(true);
-      eraseAt(x, y);
-      lastEraseSave = Date.now();
-    }
-  });
+    </div>
 
-  window.addEventListener("mouseup", () => {
-    if (!drawing) return;
-    drawing = false;
-    saveHistory(true);
-  });
+  </div>
 
-  cTinta.addEventListener("mousemove", (e) => {
-    if (!drawing || modo !== "apagar") return;
-
-    const rect = cTinta.getBoundingClientRect();
-    const x = (e.clientX - rect.left) * (cTinta.width / rect.width);
-    const y = (e.clientY - rect.top) * (cTinta.height / rect.height);
-
-    eraseAt(x, y);
-
-    if (Date.now() - lastEraseSave > 350) {
-      saveHistory(true);
-      lastEraseSave = Date.now();
-    }
-  });
-
-  // Suporte a touch para mobile
-  cTinta.addEventListener("touchstart", (e) => {
-    e.preventDefault();
-    if (!cTinta.width) return;
-
-    const touch = e.touches[0];
-    const rect = cTinta.getBoundingClientRect();
-    const x = Math.floor((touch.clientX - rect.left) * (cTinta.width / rect.width));
-    const y = Math.floor((touch.clientY - rect.top) * (cTinta.height / rect.height));
-
-    if (modo === "pintar") {
-      saveHistory(true);
-      floodFillFast(x, y, tolerance);
-      saveHistory(true);
-    } else {
-      drawing = true;
-      saveHistory(true);
-      eraseAt(x, y);
-      lastEraseSave = Date.now();
-    }
-  });
-
-  cTinta.addEventListener("touchend", () => {
-    if (!drawing) return;
-    drawing = false;
-    saveHistory(true);
-  });
-
-  cTinta.addEventListener("touchmove", (e) => {
-    e.preventDefault();
-    if (!drawing || modo !== "apagar") return;
-
-    const touch = e.touches[0];
-    const rect = cTinta.getBoundingClientRect();
-    const x = (touch.clientX - rect.left) * (cTinta.width / rect.width);
-    const y = (touch.clientY - rect.top) * (cTinta.height / rect.height);
-
-    eraseAt(x, y);
-
-    if (Date.now() - lastEraseSave > 350) {
-      saveHistory(true);
-      lastEraseSave = Date.now();
-    }
-  });
-
-  // Botões
-  btnUndo.addEventListener("click", undo);
-  btnRedo.addEventListener("click", redo);
-  btnPintar.addEventListener("click", () => setModo("pintar"));
-  btnApagar.addEventListener("click", () => setModo("apagar"));
-  btnDownload.addEventListener("click", () => downloadFinal('png'));
-  btnDownloadJPG.addEventListener("click", () => downloadFinal('jpg'));
-  btnRecolor.addEventListener("click", recolorOverlay);
-  btnZoomIn.addEventListener("click", zoomIn);
-  btnZoomOut.addEventListener("click", zoomOut);
-  btnResetZoom.addEventListener("click", resetZoom);
-  btnClear.addEventListener("click", clearAll);
-
-  // Paleta de cores
-  document.querySelectorAll(".dot").forEach(d => {
-    d.addEventListener("click", () => {
-      corAtual = d.dataset.hex;
-      document.querySelectorAll(".dot").forEach(el => el.classList.remove("selected"));
-      d.classList.add("selected");
-      iaColorEl.style.background = corAtual;
-      hexLabelEl.textContent = corAtual.toUpperCase();
-      showNotification(`Cor selecionada: ${corAtual.toUpperCase()}`, 'info');
-    });
-  });
-
-  // ==================== ATALHOS DE TECLADO ====================
-  document.addEventListener('keydown', (e) => {
-    // Ctrl+Z - Desfazer
-    if (e.ctrlKey && e.key === 'z') {
-      e.preventDefault();
-      undo();
-    }
-    
-    // Ctrl+Y - Refazer
-    if (e.ctrlKey && e.key === 'y') {
-      e.preventDefault();
-      redo();
-    }
-    
-    // Ctrl+L - Limpar
-    if (e.ctrlKey && e.key === 'l') {
-      e.preventDefault();
-      clearAll();
-    }
-    
-    // Ctrl++ - Zoom In
-    if (e.ctrlKey && (e.key === '+' || e.key === '=')) {
-      e.preventDefault();
-      zoomIn();
-    }
-    
-    // Ctrl+- - Zoom Out
-    if (e.ctrlKey && e.key === '-') {
-      e.preventDefault();
-      zoomOut();
-    }
-    
-    // Ctrl+0 - Reset Zoom
-    if (e.ctrlKey && e.key === '0') {
-      e.preventDefault();
-      resetZoom();
-    }
-    
-    // P - Modo Pintar
-    if (e.key === 'p' || e.key === 'P') {
-      setModo('pintar');
-    }
-    
-    // E - Modo Borracha
-    if (e.key === 'e' || e.key === 'E') {
-      setModo('apagar');
-    }
-  });
-
-  // ==================== RESPONSIVIDADE ====================
-  window.addEventListener("resize", () => {
-    if (!img.src) return;
-
-    const oldOverlay = cTinta.width ? ctxT.getImageData(0, 0, cTinta.width, cTinta.height) : null;
-
-    resizeToFitImage();
-
-    if (oldOverlay) {
-      const temp = document.createElement("canvas");
-      temp.width = oldOverlay.width;
-      temp.height = oldOverlay.height;
-      temp.getContext("2d").putImageData(oldOverlay, 0, 0);
-
-      ctxT.drawImage(temp, 0, 0, cTinta.width, cTinta.height);
-      saveHistory(true);
-    }
-  });
-
-  // ==================== INICIALIZAÇÃO ====================
-  updateUndoRedo();
-  setStatus("IA Pronta");
-  
-  console.log('%c🎨 Veloz Studio Pro carregado com sucesso!', 'color: #6e0a78; font-size: 16px; font-weight: bold;');
-  console.log('%cAtalhos de teclado:', 'color: #27ae60; font-weight: bold;');
-  console.log('Ctrl+Z: Desfazer | Ctrl+Y: Refazer | Ctrl+L: Limpar');
-  console.log('Ctrl++: Zoom In | Ctrl+-: Zoom Out | Ctrl+0: Reset Zoom');
-  console.log('P: Pintar | E: Borracha');
-</script>
+  </footer>
 </body>
 </html>
+  <script src="/assets/js/main.js"></script>
+<script src="/simuladordecores/simulador.js"></script>

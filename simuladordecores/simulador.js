@@ -1,136 +1,149 @@
-const canvasFundo = document.getElementById('canvasFundo');
-const canvasTinta = document.getElementById('canvasTinta');
-const ctxFundo = canvasFundo.getContext('2d', { willReadFrequently: true });
-const ctxTinta = canvasTinta.getContext('2d');
-const upload = document.getElementById('upload');
-const instrucao = document.getElementById('instrucao');
+const velozColors = [
+    { name: "Branco Polar", hex: "#efeff0", code: "201" },
+    { name: "Branco Gelo", hex: "#ccccc7", code: "202" },
+    { name: "Pérola", hex: "#ede8c8", code: "203" },
+    { name: "Palha", hex: "#e0dbbc", code: "204" },
+    { name: "Marfim", hex: "#d4d0b6", code: "205" },
+    { name: "Areia", hex: "#c7b097", code: "206" },
+    { name: "Azul Leal", hex: "#214182", code: "207" },
+    { name: "Rosa Plissê", hex: "#bd93b2", code: "208" },
+    { name: "Cerâmica", hex: "#e3682b", code: "209" },
+    { name: "Verde Norte", hex: "#cde7dc", code: "210" }
+];
 
-let imgOriginal = new Image();
-let corAtual = '#6e0a78';
-let modo = 'pintar'; 
-let desenhando = false;
+let selectedArea = "Parede";
+let selectedColor = velozColors[0];
 
-// 1. Carregar Foto
-upload.addEventListener('change', (e) => {
-    const reader = new FileReader();
-    reader.onload = (event) => {
-        imgOriginal.onload = () => {
-            configurarCanvas();
-            if (instrucao) instrucao.style.display = 'none';
-        };
-        imgOriginal.src = event.target.result;
-    };
-    reader.readAsDataURL(e.target.files[0]);
+// Inicializar Grade de Cores
+const container = document.getElementById('colorsContainer');
+velozColors.forEach(color => {
+    const div = document.createElement('div');
+    div.className = 'color-item-modern';
+    div.style.backgroundColor = color.hex;
+    div.title = color.name;
+    div.onclick = () => setColor(color, div);
+    container.appendChild(div);
 });
 
-function configurarCanvas() {
-    const wrapper = canvasFundo.parentElement;
-    const prop = imgOriginal.width / imgOriginal.height;
-    let largura = wrapper.clientWidth;
-    let altura = largura / prop;
-
-    canvasFundo.width = canvasTinta.width = largura;
-    canvasFundo.height = canvasTinta.height = altura;
-    ctxFundo.drawImage(imgOriginal, 0, 0, largura, altura);
+function setArea(area, el, imgUrl) {
+    selectedArea = area;
+    document.querySelectorAll('.area-card').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    
+    document.getElementById('dynamicImage').style.backgroundImage = `url('${imgUrl}')`;
+    document.getElementById('displayAreaName').innerText = area;
+    updatePrompt();
 }
 
-// 2. Varinha Mágica (Detecção de Similaridade)
-canvasTinta.addEventListener('click', (e) => {
-    if (modo !== 'pintar' || !imgOriginal.src) return;
-
-    const rect = canvasTinta.getBoundingClientRect();
-    const x = Math.round((e.clientX - rect.left) * (canvasFundo.width / rect.width));
-    const y = Math.round((e.clientY - rect.top) * (canvasFundo.height / rect.height));
-
-    const imgData = ctxFundo.getImageData(0, 0, canvasFundo.width, canvasFundo.height);
+function setColor(color, el) {
+    selectedColor = color;
+    document.querySelectorAll('.color-item-modern').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
     
-    // IA: Preencher área com cores semelhantes
-    executarVarinha(x, y, imgData);
-});
+    document.getElementById('colorOverlay').style.backgroundColor = color.hex;
+    document.getElementById('displayColorName').innerText = color.name;
+    updatePrompt();
+}
 
-function executarVarinha(startX, startY, imgData) {
-    const w = imgData.width;
-    const h = imgData.height;
-    const pix = imgData.data;     
-    const pos = (startY * w + startX) * 4;
-    
-    const targetColor = [pix[pos], pix[pos+1], pix[pos+2]];
-    const tol = parseInt(document.getElementById('toleranciaIA').value);
-    
-    const stack = [[startX, startY]];
-    const visitados = new Uint8Array(w * h);
-    ctxTinta.fillStyle = corAtual;
+function updatePrompt() {
+    const promptText = document.getElementById('promptText');
+    const rgb = hexToRgb(selectedColor.hex);
+    let specificInstruction = "";
 
-    while (stack.length) {
-        const [currX, currY] = stack.pop();
-        const p = currY * w + currX;
-        if (currX < 0 || currX >= w || currY < 0 || currY >= h || visitados[p]) continue;
+    switch(selectedArea) {
+        case "Parede":
+            specificInstruction = `
+Aja como um especialista em visualização arquitetônica e edição fotorealista.
+Na imagem fornecida, identifique exclusivamente as superfícies de parede principais e aplique a cor oficial da marca Tintas Veloz (Nome: ${selectedColor.name}, Código: ${selectedColor.code}, HEX: ${selectedColor.hex}, RGB: ${rgb.r}, ${rgb.g}, ${rgb.b}).
 
-        const i = p * 4;
-        const diff = Math.sqrt(
-            Math.pow(pix[i] - targetColor[0], 2) +
-            Math.pow(pix[i+1] - targetColor[1], 2) + 
-            Math.pow(pix[i+2] - targetColor[2], 2)
-        );
+Utilize exatamente os valores informados, sem qualquer ajuste, interpretação ou variação de tonalidade.
 
-        if (diff < tol) {
-            visitados[p] = 1;
-            ctxTinta.fillRect(currX, currY, 1, 1);
-            stack.push([currX+1, currY], [currX-1, currY], [currX, currY+1], [currX, currY-1]);
-        }
+Preserve integralmente:
+- iluminação natural e artificial
+- sombras e oclusão de luz
+- textura da alvenaria ou acabamento existente
+- reflexos sutis e profundidade do ambiente
+
+A aplicação deve respeitar limites físicos reais da parede (quinas, portas, janelas), sem invadir móveis ou objetos.
+
+Mantenha a imagem original como base absoluta e altere apenas a cor da parede com acabamento acetinado realista.
+
+Evite vazamento de cor para outras áreas.
+`;
+            break;
+
+        case "Piso":
+            specificInstruction = `
+Aja como um especialista em renderização realista de ambientes internos.
+Na imagem fornecida, identifique exclusivamente a superfície do piso e aplique a cor oficial da marca Tintas Veloz (Nome: ${selectedColor.name}, Código: ${selectedColor.code}, HEX: ${selectedColor.hex}, RGB: ${rgb.r}, ${rgb.g}, ${rgb.b}).
+
+Utilize estritamente os valores fornecidos, sem alteração de cor, contraste ou saturação.
+
+Preserve com precisão:
+- perspectiva e profundidade do piso
+- brilho e reflexo do material
+- textura (cerâmica, madeira, cimento, etc.)
+- juntas, rejuntes e divisões
+- interação da luz com a superfície
+
+A aplicação deve seguir corretamente o plano do chão e o ângulo da câmera.
+
+Não altere paredes, móveis ou outros elementos.
+
+Evite vazamento de cor para outras áreas.
+`;
+            break;
+
+        case "Telhado":
+            specificInstruction = `
+Aja como um especialista em simulação de superfícies externas e materiais.
+Na imagem fornecida, identifique exclusivamente o telhado e aplique a cor oficial da marca Tintas Veloz (Nome: ${selectedColor.name}, Código: ${selectedColor.code}, HEX: ${selectedColor.hex}, RGB: ${rgb.r}, ${rgb.g}, ${rgb.b}).
+
+Utilize exatamente os valores fornecidos, sem qualquer ajuste ou interpretação de cor.
+
+Preserve fielmente:
+- relevo e geometria das telhas
+- sombras entre as peças
+- iluminação natural e reflexos
+- textura e rugosidade do material
+
+A aplicação deve respeitar a separação entre telhas e manter o efeito tridimensional.
+
+Não altere céu, paredes ou qualquer outro elemento da imagem.
+
+Evite vazamento de cor para outras áreas.
+`;
+            break;
+
+        default:
+            specificInstruction = `
+Aplique a cor na área indicada preservando todos os detalhes realistas, sem alterar outros elementos da imagem.
+`;
     }
+
+    const prompt = specificInstruction.trim();
+    promptText.innerText = prompt;
+}
+function hexToRgb(hex) {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return { r, g, b };
 }
 
-// 3. Pincel Manual
-canvasTinta.onmousedown = () => desenhando = true;
-window.onmouseup = () => desenhando = false;
-canvasTinta.onmousemove = (e) => {
-    if (!desenhando) return;
-    const rect = canvasTinta.getBoundingClientRect();
-    const x = (e.clientX - rect.left) * (canvasFundo.width / rect.width);
-    const y = (e.clientY - rect.top) * (canvasFundo.height / rect.height);
-    const tam = document.getElementById('sizePincel').value;
+function copyPrompt() {
+    navigator.clipboard.writeText(document.getElementById('promptText').innerText);
+    const btn = document.querySelector('.btn-copy');
+    btn.innerText = "Copiado!";
+    setTimeout(() => btn.innerText = "Copiar Prompt", 2000);
+}
 
-    ctxTinta.globalCompositeOperation = modo === 'pintar' ? 'source-over' : 'destination-out';
-    ctxTinta.beginPath();
-    ctxTinta.arc(x, y, tam / 2, 0, Math.PI * 2);
-    ctxTinta.fillStyle = corAtual;
-    ctxTinta.fill();
+function openGemini() {
+    window.open("https://gemini.google.com/app", "_blank");
+}
+
+// Inicia com a primeira cor selecionada
+window.onload = () => {
+    const firstColorEl = document.querySelector('.color-item-modern');
+    if(firstColorEl) setColor(velozColors[0], firstColorEl);
 };
-
-// 4. Troca Global de Cor
-document.querySelectorAll('.cor-item').forEach(item => {
-    item.addEventListener('click', (e) => {
-        corAtual = e.target.dataset.color;
-        ctxTinta.globalCompositeOperation = 'source-in';
-        ctxTinta.fillStyle = corAtual;
-        ctxTinta.fillRect(0, 0, canvasTinta.width, canvasTinta.height);
-        ctxTinta.globalCompositeOperation = 'source-over';
-        
-        document.querySelectorAll('.cor-item').forEach(i => i.classList.remove('selected'));
-        item.classList.add('selected');
-    });
-});
-
-function setModo(m) {
-    modo = m;
-    document.getElementById('btnPintar').classList.toggle('active', m === 'pintar');
-    document.getElementById('btnApagar').classList.toggle('active', m === 'apagar');
-}
-
-function limparTudo() { ctxTinta.clearRect(0, 0, canvasTinta.width, canvasTinta.height); }
-
-function salvarProjeto() {
-    const final = document.createElement('canvas');
-    final.width = canvasFundo.width; final.height = canvasFundo.height;
-    const fCtx = final.getContext('2d');
-    fCtx.drawImage(canvasFundo, 0, 0);
-    fCtx.globalAlpha = 0.8;
-    fCtx.globalCompositeOperation = 'multiply';
-    fCtx.drawImage(canvasTinta, 0, 0);
-    
-    const link = document.createElement('a');
-    link.download = 'meu-projeto-veloz.png';
-    link.href = final.toDataURL();
-    link.click();
-}
