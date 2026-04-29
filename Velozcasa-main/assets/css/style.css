@@ -1,0 +1,499 @@
+/* VARIÁVEIS DE CORES */
+:root {
+  --roxo-escuro: #2B0A3D;
+  --roxo-medio: #4B1C66;
+  --roxo-claro: #6F3A8A;
+   --roxo-veloz: #52259E; /* Sua cor principal */
+  --branco: #ffffff;
+  --azul-veloz: #3fa9f5;
+  --cinza: #f5f5f7;
+  --branco: #ffffff;
+  --cinza-fundo: #f9f9fb;
+  --dark-veloz: #1a1a1a;
+  --cinza-claro: #f5f5f7;
+  --soft-bg: #f5f5f7;
+  --transicao-suave: 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes pageFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+
+
+/* RESET E CONFIGURAÇÕES GERAIS */
+* { 
+  margin: 0; 
+  padding: 0; 
+  box-sizing: border-box; 
+  font-family: 'Noto Sans JP', sans-serif; 
+}
+
+/* Estilo do Preloader (Adicionado para funcionar com seu JS) */
+#preloader {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: #fff;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+html, body {
+  overflow-x: hidden; /* Impede o scroll horizontal global */
+  width: 100%;
+  position: relative;
+}
+
+/* Garante que imagens e grids não estoure o container */
+img {
+  max-width: 100%;
+  height: auto;
+}
+body {
+  background: var(--cinza);
+  color: #333;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main { flex: 1; }
+
+.container { 
+  width: 90%; 
+  max-width: 1200px; 
+  margin: 0 auto; 
+}
+
+/* --- HEADER --- */
+header { padding-top: 16px; background: white; }
+.header-top { display: flex; align-items: center; justify-content: space-between; padding-bottom: 16px; }
+.logo { height: 70px; }
+.search-social { display: flex; align-items: center; gap: 20px; flex-grow: 1; justify-content: flex-end; margin-right: 20px; }
+.search-bar input { padding: 8px 16px; border-radius: 20px; border: 1px solid #ddd; width: 280px; outline: none; }
+.social-links { display: flex; align-items: center; gap: 12px; color: black; font-size: 14px; }
+.social-icon { width: 22px; filter: black; transition: 0.3s; }
+/* --- NAVEGAÇÃO --- */
+header .branco { background: var(--roxo-veloz); width: 100%; display: flex; justify-content: center; }
+.nav-desktop { padding: 12px 0; display: flex; justify-content: center; align-items: center; gap: 20px; }
+.nav-desktop a { color: white; text-decoration: none; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 16px; border: 1px solid transparent; transition: 0.3s; }
+.nav-desktop a.here { background-color: var(--roxo-veloz); color: #fff; border-radius: 4px; font-weight: bold; border: 1px solid rgba(255, 255, 255, 0.4); box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); }
+
+/* --- FOOTER --- */
+.footer { background: #fff; width: 100%; }
+.footer-strip { height: 60px; width: 100%; background: var(--roxo-veloz); padding: 0;}
+.footer-main { max-width: 1280px; margin: 0 auto; padding: 60px 40px; display: grid; grid-template-columns: 1.2fr 1fr 1.5fr; gap: 40px; align-items: flex-start; }
+.footer-col-logo { position: relative; margin-top: -16px; }
+.footer-logo { width: 220px; margin-top: -300px; }
+.footer-text { margin-top: 20px; font-size: 12px; color: #1d1d1f; line-height: 1.5; }
+.footer-col-selos { display: flex; flex-direction: column; gap: 25px; }
+.selos-top, .selos-middle { display: flex; gap: 20px; align-items: center; }
+.selos-top img, .selos-middle img { height: 50px; }
+.social-icons { display: flex; gap: 12px; }
+.footer-social { width: 24px; height: 24px; filter: brightness(0); transition: 0.3s; }
+.footer-col-menu { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
+.menu-col h4 { font-size: 14px; margin-bottom: 12px; }
+.menu-col ul { list-style: none; }
+.menu-col li { font-size: 13px; margin-bottom: 8px; cursor: pointer; }
+.menu-col ul li a {
+  text-decoration: none; color: #1d1d1f;
+}
+
+img.ok{
+  width: auto;
+  height: 27px;   /* ajusta aqui */
+  object-fit: contain;
+ }
+
+
+ 
+
+
+/* --- MOBILE --- */
+.hamburger { display: none; background: none; border: none; color: var(--roxo-veloz); font-size: 30px; cursor: pointer; }
+
+@media (max-width: 900px) {
+  .nav-desktop, .search-social { display: none; }
+  .hamburger { display: block; }
+  .footer-main { grid-template-columns: 1fr; text-align: center; }
+  .footer-logo { margin: -120px auto 0; }
+  .selos-top, .selos-middle, .social-icons { justify-content: center; }
+  .footer-col-menu { grid-template-columns: 1fr; gap: 25px; }
+}
+
+.menu-mobile { position: fixed; top: 0; right: -100%; width: 280px; height: 100vh; background: var(--roxo-escuro); padding: 30px; z-index: 100; transition: 0.4s; }
+.menu-mobile.active { right: 0; }
+.nav-mobile { display: flex; flex-direction: column; margin-top: 40px; }
+.nav-mobile a { color: white; text-decoration: none; font-size: 18px; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; z-index: 90; }
+.overlay.active { display: block; }
+
+.page-indicator { 
+  background: #a86cac; 
+  color: white; 
+  padding: 12px 0; 
+  font-weight: 700; 
+  text-transform: uppercase; 
+  font-size: 14px; 
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ==========================================================================
+   NOVA ESTRUTURA MAIN - TINTAS VELOZ (MODERNO)
+   ========================================================================== */
+
+/* 1. HERO BANNER (LIMPO) */
+/* 1. Hero */
+.hero-clean img { width: 100%; height: auto; display: block; }
+
+/* 2. Mosaico */
+.mosaic-section { padding: 80px 0; background: #fff; }
+.section-header { text-align: center; margin-bottom: 50px; }
+.badge { background: #f4f4f9; color: var(--roxo-veloz); padding: 6px 16px; border-radius: 50px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; display: inline-block; }
+.section-header h2 { font-size: clamp(28px, 4vw, 42px); color: var(--dark-veloz); margin: 15px 0; font-weight: 800; }
+.line-detail { width: 50px; height: 5px; background: var(--azul-veloz); margin: 0 auto; border-radius: 10px; }
+
+.mosaic-grid { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 300px); gap: 20px; width: 90%; max-width: 1200px; margin: 0 auto; }
+.mosaic-item { border-radius: 30px; background-size: cover; background-position: center; position: relative; overflow: hidden; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
+.mosaic-item:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+.mosaic-item::after { content: ''; position: absolute; inset: 0; background: linear-gradient(transparent 40%, rgba(0,0,0,0.7)); }
+.mosaic-item span, .mosaic-overlay { position: absolute; bottom: 25px; left: 25px; color: #fff; z-index: 2; }
+.mosaic-item h3 { font-size: 24px; font-weight: 700; margin-bottom: 5px; }
+.mosaic-item p { font-size: 14px; opacity: 0.8; }
+.mosaic-item.big { grid-column: span 2; grid-row: span 2; }
+.mosaic-item.wide { grid-column: span 2; }
+
+/* 3. Simulador (Correção de Imagem Estourada) */
+/* --- SEÇÃO SIMULADOR PREMIUM --- */
+.color-studio {
+  padding: 100px 0;
+  background: #ffffff;
+}
+
+.studio-card {
+  display: flex;
+  align-items: center;
+  background: #fcfcfd;
+  border-radius: 50px;
+  max-width: 1200px;
+  margin: 0 auto;
+  overflow: hidden;
+  box-shadow: 0 40px 100px rgba(0,0,0,0.05);
+  border: 1px solid #f0f0f5;
+}
+
+/* Lado Visual */
+.studio-visual {
+  flex: 1.2;
+  position: relative;
+  background: radial-gradient(circle at center, #f0f0ff 0%, #ffffff 100%);
+  padding: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 500px;
+}
+
+.visual-container {
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.studio-img-main {
+  max-width: 85%;
+  height: auto;
+  filter: drop-shadow(0 30px 50px rgba(0,0,0,0.1));
+  border-radius: 20px;
+  
+  /* Adiciona o giro: 20 segundos, linear (sem pausas), infinito */
+  animation: rotateMainImg 40s linear infinite;
+}
+
+/* Define a animação da imagem */
+@keyframes rotateMainImg {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* CONTAINER DA ORBITA (o anel gira ao redor da imagem) */
+
+
+
+
+
+
+
+
+
+
+/* =========================================
+   CONFIGURAÇÕES GERAIS E ÓRBITA
+   ========================================= */
+:root {
+  --orbit-radius: 220px; /* Distância das bolhas até o centro */
+}
+
+.color-orbit {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* =========================================
+   BOLHAS (ESTILO BASE)
+   ========================================= */
+.color-bubble {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 4px solid #ffffff;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  pointer-events: auto;
+  z-index: 2;
+  
+  /* Garante que elas comecem na órbita e não no centro */
+  transform: translate(-50%, -50%) rotate(var(--angle)) translateX(var(--orbit-radius));
+  transition: 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* TEXTO: O segredo do contra-giro */
+.color-bubble span {
+  font-size: 10px;
+  color: #fff;
+  font-weight: 800;
+  text-align: center;
+  opacity: 0;
+  transition: 0.25s ease;
+  
+  /* calc(var(--angle) * -1) desfaz a rotação do pai para o texto ficar reto */
+  transform: rotate(calc(var(--angle) * -1)) translateY(6px);
+  
+  text-shadow: 0 4px 10px rgba(0,0,0,0.35);
+  max-width: 64px;
+  line-height: 1.1;
+  display: block;
+  pointer-events: none;
+}
+
+/* HOVER: Efeito de escala mantendo a posição orbital */
+.color-bubble:hover {
+  z-index: 10;
+  animation-play-state: paused; /* Para a flutuação ao interagir */
+  transform: translate(-50%, -50%) rotate(var(--angle)) translateX(var(--orbit-radius)) scale(1.15);
+}
+
+.color-bubble:hover span {
+  opacity: 1;
+  transform: rotate(calc(var(--angle) * -1)) translateY(0);
+}
+
+/* =========================================
+   DISTRIBUIÇÃO DAS 12 CORES (30° em 30°)
+   ========================================= */
+
+.c1  { --angle: 0deg;   background: #63481f; animation: float0 4s infinite ease-in-out; }
+.c2  { --angle: 30deg;  background: #63ade2; animation: float30 4s infinite ease-in-out; animation-delay: 0.3s; }
+.c3  { --angle: 60deg;  background: #a74867; animation: float60 4s infinite ease-in-out; animation-delay: 0.6s; }
+.c4  { --angle: 90deg;  background: #ffc107; animation: float90 4s infinite ease-in-out; animation-delay: 0.9s; }
+.c5  { --angle: 120deg; background: #2e7d32; animation: float120 4s infinite ease-in-out; animation-delay: 1.2s; }
+.c6  { --angle: 150deg; background: #2b2b2b; animation: float150 4s infinite ease-in-out; animation-delay: 1.5s; }
+.c7  { --angle: 180deg; background: #0b2d4d; animation: float180 4s infinite ease-in-out; animation-delay: 1.8s; }
+.c8  { --angle: 210deg; background: #bf360c; animation: float210 4s infinite ease-in-out; animation-delay: 2.1s; }
+.c9  { --angle: 240deg; background: #5d4037; animation: float240 4s infinite ease-in-out; animation-delay: 2.4s; }
+.c10 { --angle: 270deg; background: #8b5cf6; animation: float270 4s infinite ease-in-out; animation-delay: 2.7s; }
+.c11 { --angle: 300deg; background: #c2185b; animation: float300 4s infinite ease-in-out; animation-delay: 3.0s; }
+.c12 { --angle: 330deg; background: #0097a7; animation: float330 4s infinite ease-in-out; animation-delay: 3.3s; }
+
+/* =========================================
+   KEYFRAMES DE FLUTUAÇÃO (1 para cada ângulo)
+   ========================================= */
+
+@keyframes float0   { 0%, 100% { transform: translate(-50%,-50%) rotate(0deg)   translateX(var(--orbit-radius)) translateY(0); } 50% { transform: translate(-50%,-50%) rotate(0deg)   translateX(var(--orbit-radius)) translateY(-15px); } }
+@keyframes float30  { 0%, 100% { transform: translate(-50%,-50%) rotate(30deg)  translateX(var(--orbit-radius)) translateY(0); } 50% { transform: translate(-50%,-50%) rotate(30deg)  translateX(var(--orbit-radius)) translateY(-15px); } }
+@keyframes float60  { 0%, 100% { transform: translate(-50%,-50%) rotate(60deg)  translateX(var(--orbit-radius)) translateY(0); } 50% { transform: translate(-50%,-50%) rotate(60deg)  translateX(var(--orbit-radius)) translateY(-15px); } }
+@keyframes float90  { 0%, 100% { transform: translate(-50%,-50%) rotate(90deg)  translateX(var(--orbit-radius)) translateY(0); } 50% { transform: translate(-50%,-50%) rotate(90deg)  translateX(var(--orbit-radius)) translateY(-15px); } }
+@keyframes float120 { 0%, 100% { transform: translate(-50%,-50%) rotate(120deg) translateX(var(--orbit-radius)) translateY(0); } 50% { transform: translate(-50%,-50%) rotate(120deg) translateX(var(--orbit-radius)) translateY(-15px); } }
+@keyframes float150 { 0%, 100% { transform: translate(-50%,-50%) rotate(150deg) translateX(var(--orbit-radius)) translateY(0); } 50% { transform: translate(-50%,-50%) rotate(150deg) translateX(var(--orbit-radius)) translateY(-15px); } }
+@keyframes float180 { 0%, 100% { transform: translate(-50%,-50%) rotate(180deg) translateX(var(--orbit-radius)) translateY(0); } 50% { transform: translate(-50%,-50%) rotate(180deg) translateX(var(--orbit-radius)) translateY(-15px); } }
+@keyframes float210 { 0%, 100% { transform: translate(-50%,-50%) rotate(210deg) translateX(var(--orbit-radius)) translateY(0); } 50% { transform: translate(-50%,-50%) rotate(210deg) translateX(var(--orbit-radius)) translateY(-15px); } }
+@keyframes float240 { 0%, 100% { transform: translate(-50%,-50%) rotate(240deg) translateX(var(--orbit-radius)) translateY(0); } 50% { transform: translate(-50%,-50%) rotate(240deg) translateX(var(--orbit-radius)) translateY(-15px); } }
+@keyframes float270 { 0%, 100% { transform: translate(-50%,-50%) rotate(270deg) translateX(var(--orbit-radius)) translateY(0); } 50% { transform: translate(-50%,-50%) rotate(270deg) translateX(var(--orbit-radius)) translateY(-15px); } }
+@keyframes float300 { 0%, 100% { transform: translate(-50%,-50%) rotate(300deg) translateX(var(--orbit-radius)) translateY(0); } 50% { transform: translate(-50%,-50%) rotate(300deg) translateX(var(--orbit-radius)) translateY(-15px); } }
+@keyframes float330 { 0%, 100% { transform: translate(-50%,-50%) rotate(330deg) translateX(var(--orbit-radius)) translateY(0); } 50% { transform: translate(-50%,-50%) rotate(330deg) translateX(var(--orbit-radius)) translateY(-15px); } }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Efeito de Brilho no Fundo */
+.glow-effect {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background: var(--roxo-veloz);
+  filter: blur(120px);
+  opacity: 0.1;
+  z-index: 1;
+}
+
+/* Lado do Texto */
+.studio-text {
+  flex: 1;
+  padding: 80px;
+}
+
+.studio-text h2 {
+  font-size: 44px;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin: 20px 0;
+  line-height: 1.1;
+}
+
+.studio-stats {
+  display: flex;
+  gap: 40px;
+  margin: 30px 0;
+}
+
+.stat strong {
+  display: block;
+  font-size: 24px;
+  color: var(--roxo-veloz);
+}
+
+.stat span {
+  font-size: 14px;
+  color: #888;
+}
+
+/* Ajuste Mobile */
+@media (max-width: 900px) {
+  :root {
+    --orbit-radius: 130px; /* Reduzi de 220 para 130 no mobile */
+  }
+  .studio-card { flex-direction: column; border-radius: 30px; }
+  .studio-visual { padding: 60px 20px; width: 100%; order: 1; }
+  .studio-text { padding: 40px 25px; text-align: center; order: 2; }
+ .color-bubble {
+    width: 50px; /* Bolinhas menores para caber melhor */
+    height: 50px;
+  }
+  .studio-img-main { max-width: 70%; }
+}
+.text-purple { color: var(--roxo-veloz); }
+.btn-studio { background: var(--roxo-veloz); color: #fff; border: none; padding: 16px 35px; border-radius: 50px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+.btn-studio:hover { background: var(--roxo-claro); transform: scale(1.05); }
+
+/* Blobs de fundo para dar profundidade sem poluir */
+.floating-blobs .blob { position: absolute; width: 200px; height: 200px; filter: blur(60px); opacity: 0.2; z-index: 1; border-radius: 50%; }
+.b-purple { background: var(--roxo-veloz); top: -20px; left: -20px; }
+.b-blue { background: var(--azul-veloz); bottom: -20px; right: -20px; }
+
+/* 4. Parceiros (Cards Premium) */
+.partners-new-era { 
+  display: grid; grid-template-columns: 1fr 1fr; gap: 30px; 
+  width: 90%; max-width: 1200px; margin: 80px auto; 
+}
+.partner-card { 
+  height: 450px; border-radius: 40px; position: relative; 
+  overflow: hidden; display: flex; align-items: flex-end; padding: 50px;
+  transition: 0.5s;
+}
+.partner-bg { 
+  position: absolute; inset: 0; background-size: cover; background-position: center; 
+  transition: 1s cubic-bezier(0.2, 1, 0.3, 1); z-index: 1;
+}
+.partner-card::before { 
+  content: ''; position: absolute; inset: 0; 
+  background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); z-index: 2; 
+}
+.partner-info { position: relative; z-index: 3; color: #fff; }
+.p-icon { font-size: 40px; margin-bottom: 15px; }
+.partner-info h3 { font-size: 32px; font-weight: 800; margin-bottom: 10px; }
+.partner-info p { font-size: 16px; opacity: 0.8; margin-bottom: 25px; max-width: 350px; }
+.p-button { 
+  display: inline-block; padding: 12px 30px; border: 2px solid #fff; 
+  border-radius: 50px; color: #fff; text-decoration: none; font-weight: 700; 
+  text-transform: uppercase; font-size: 12px; transition: 0.3s;
+}
+.partner-card:hover .partner-bg { transform: scale(1.1); }
+.partner-card:hover .p-button { background: #fff; color: var(--roxo-veloz); }
+
+/* --- MOBILE --- */
+@media (max-width: 900px) {
+  @media (max-width: 768px) {
+  .mosaic-grid {
+    display: flex;
+    flex-direction: column; /* Em vez de grid, empilha no mobile pra segurança */
+    width: 100%;
+    gap: 15px;
+  }
+  .mosaic-item {
+    width: 100% !important;
+    height: 250px;
+  }
+}
+  .mosaic-item.big, .mosaic-item.wide { grid-column: span 2; }
+  
+  .studio-card { flex-direction: column; width: 95%; }
+  .studio-text { padding: 40px 30px; text-align: center; }
+  
+  .partners-new-era { grid-template-columns: 1fr; }
+  .partner-card { height: 380px; padding: 30px; }
+}
+
+/* --- 
+
+
+
+*/

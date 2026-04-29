@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Tintas Veloz | Química e Solventes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/assets/css/style.css"> 
+  <link rel="stylesheet" href="/simuladordecores/simulador.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="header-top">
+        <img src="/assets/img/width_550.png" class="logo" alt="Veloz">
+        <div class="search-social">
+          <div class="search-bar">
+            <input type="text" id="inputBusca" placeholder="Pesquisar produtos...">
+          </div>
+            <div class="social-links">
+          <span>Siga-nos</span>
+          <a href="https://www.instagram.com/tintasveloz"><img src="/assets/svg/instagram-icon-svgrepo-com.svg" class="social-icon" alt="Instagram"></a>
+          <a href="https://www.facebook.com/veloztintas"><img src="https://www.svgrepo.com/show/521654/facebook.svg" class="social-icon" alt="Facebook"></a>
+        </div>
+        </div>
+        <button class="hamburger" id="openMenu">☰</button>
+      </div> 
+    </div> 
+    <div class="branco"> 
+      <nav class="nav-desktop">
+        <a class="here" href="/index.html">Home</a> 
+        <a href="#">História</a>
+        <a  href="/produtos/index.html">Produtos</a>
+        <a href="#">Certificações</a>
+        <a href="#">Downloads</a>
+        <a href="#">Contato</a>
+        <a href="/lojaparceira/index.html">Loja parceira</a>
+      </nav>
+    </div>
+  </div>
+  </header>
+  <aside class="menu-mobile" id="menuMobile">
+   
+    <nav class="nav-mobile">
+      <a href="/index.html">Home</a>
+      <a href="#">História</a>
+      <a href="/produtos/index.html">Produtos</a>
+      <a href="#">Certificações</a>
+      <a href="#">Downloads</a>
+      <a href="#">Contato</a>
+      <a href="/lojaparceira/index.html">Loja parceira</a>
+    </nav>
+  </aside>
+  <div class="overlay" id="overlay"></div>
+<main class="prisma-page">
+  <div class="prisma-onboarding" style="max-width: 1000px; margin: 0 auto 50px; padding: 0 20px;">
+    
+    <div class="concept-card" style="background: #fff; padding: 40px; border-radius: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.03); margin-bottom: 30px; border-bottom: 4px solid var(--roxo-veloz);">
+        <span class="badge" style="background: #f0ebff; color: var(--roxo-veloz); padding: 6px 16px; border-radius: 50px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">Tecnologia de Ponta</span>
+        <h2 style="font-size: 32px; font-weight: 800; color: #1a1a1a; margin: 15px 0; letter-spacing: -1px;">O que é o Veloz Prisma?</h2>
+        <p style="font-size: 17px; color: #555; line-height: 1.7; max-width: 850px;">
+            O <strong>Veloz Prisma</strong> é a nossa ferramenta de inteligência visual que elimina as dúvidas na hora de reformar. Ele traduz as cores reais do nosso catálogo para comandos técnicos (prompts) que as IAs entendem perfeitamente. Assim, você visualiza o resultado final com fidelidade absoluta de tons, luzes e sombras antes de abrir a primeira lata de tinta.
+        </p>
+    </div>
+
+    <div class="how-to-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px;">
+        
+        <div class="step-item" style="background: #fdfdfd; padding: 25px; border-radius: 24px; border: 1px solid #eee; transition: 0.3s;">
+            <div style="width: 40px; height: 40px; background: var(--roxo-veloz); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; margin-bottom: 15px;">1</div>
+            <h4 style="font-weight: 700; margin-bottom: 10px; color: #1a1a1a;">Configure</h4>
+            <p style="font-size: 14px; color: #777; line-height: 1.5;">Selecione a área (parede, piso ou telhado) e escolha a cor desejada.</p>
+        </div>
+
+        <div class="step-item" style="background: #fdfdfd; padding: 25px; border-radius: 24px; border: 1px solid #eee; transition: 0.3s;">
+            <div style="width: 40px; height: 40px; background: var(--roxo-veloz); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; margin-bottom: 15px;">2</div>
+            <h4 style="font-weight: 700; margin-bottom: 10px; color: #1a1a1a;">Gere o Prompt</h4>
+            <p style="font-size: 14px; color: #777; line-height: 1.5;">O sistema cria o comando técnico exato com códigos HEX e RGB oficiais.</p>
+        </div>
+
+        <div class="step-item" style="background: #fdfdfd; padding: 25px; border-radius: 24px; border: 1px solid #eee; transition: 0.3s;">
+            <div style="width: 40px; height: 40px; background: var(--roxo-veloz); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; margin-bottom: 15px;">3</div>
+            <h4 style="font-weight: 700; margin-bottom: 10px; color: #1a1a1a;">Copie e Cole</h4>
+            <p style="font-size: 14px; color: #777; line-height: 1.5;">Clique em copiar, abra o Gemini no botão e envie junto com uma foto do seu ambiente.</p>
+        </div>
+
+    </div>
+</div>
+    <section class="prisma-hero-header">
+        <div class="container">
+            <span class="badge">IA & Design</span>
+            <h1>Veloz <span class="text-purple">Prisma</span></h1>
+            <p>A tecnologia que transforma sua dúvida em decisão. Use a inteligência artificial para visualizar as <strong>Tintas Veloz</strong> no seu ambiente real antes mesmo de abrir a lata.</p>
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="prisma-card-main">
+            
+            <div class="prisma-config">
+                <div class="config-step">
+                    <span class="step-tag">01. Onde vamos aplicar?</span>
+                    <div class="area-selector-modern">
+                        <button class="area-card active" onclick="setArea('Parede', this, 'https://s2.glbimg.com/rYVPpm8iHRRGsqziuHgyCyGH-U0=/620x455/e.glbimg.com/og/ed/f/original/2015/12/10/quarto-arquiteta-andrea-murao-roxo-cabeceira-patchwork.jpg')">
+                            <div class="area-img" style="background-image: url('https://s2.glbimg.com/rYVPpm8iHRRGsqziuHgyCyGH-U0=/620x455/e.glbimg.com/og/ed/f/original/2015/12/10/quarto-arquiteta-andrea-murao-roxo-cabeceira-patchwork.jpg')"></div>
+                            <span>Parede</span>
+                        </button>
+                        <button class="area-card" onclick="setArea('Telhado', this, 'https://api.aecweb.com.br/tematico/img_figuras/telha-ceramica.webp')">
+                            <div class="area-img" style="background-image: url('https://api.aecweb.com.br/tematico/img_figuras/telha-ceramica.webp')"></div>
+                            <span>Telhado</span>
+                        </button>
+                        <button class="area-card" onclick="setArea('Piso', this, 'https://altipisos.com.br/wp-content/uploads/2022/05/Artboard-1.png')">
+                            <div class="area-img" style="background-image: url('https://altipisos.com.br/wp-content/uploads/2022/05/Artboard-1.png')"></div>
+                            <span>Piso</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="config-step">
+                    <span class="step-tag">02. Escolha sua tonalidade</span>
+                    <div class="modern-colors-grid">
+                        <div id="colorsContainer" class="colors-wrapper"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="prisma-view">
+                <div class="preview-stage">
+                    <div id="dynamicImage" class="main-preview-img" style="background-image: url('https://i.postimg.cc/yBt5GN0J/5a5bd2f7df9f69ec5b60de5e371cca7d.jpg');">
+                        <div class="color-overlay-preview" id="colorOverlay"></div>
+                        <div class="preview-info">
+                            <h4 id="displayAreaName">Parede</h4>
+                            <p id="displayColorName">Branco Polar</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="prompt-result-area">
+                    <div class="prompt-header">
+                        <span class="ai-status">Prompt Inteligente Gerado</span>
+                    </div>
+                    <div class="prompt-box" id="promptText">
+                        Selecione as opções ao lado...
+                    </div>
+                    <div class="prompt-actions">
+                        <button class="btn-action-veloz btn-copy" onclick="copyPrompt()">Copiar Prompt</button>
+                        <button class="btn-action-veloz btn-ai" onclick="openGemini()">Usar IA</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <section class="guarantee-veloz">
+        <div class="container">
+            <div class="guarantee-card">
+                <h3>Certeza absoluta? Só com a Veloz.</h3>
+                <p>Se você pintar e não gostar, a Tintas Veloz troca a tinta para você.</p>
+            </div>
+        </div>
+    </section>
+</main>
+
+<script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+<df-messenger
+  chat-icon="https://i.postimg.cc/nhp6bzZd/Copilot-20250829-130353.png"
+  intent="WELCOME"
+  chat-title="TINA"
+  agent-id="8181e44e-af3a-465d-b5bb-27bd4a63d906"
+  language-code="pt-br"
+  wait-open	
+></df-messenger>
+<style>
+  df-messenger {
+   --df-messenger-bot-message: #3affff;
+   --df-messenger-button-titlebar-color: #e0eff1;
+   --df-messenger-bot-message: #3affff;
+   --df-messenger-chat-background-color: #fafafa;
+   --df-messenger-font-color: rgb(0, 0, 0);
+   --df-messenger-send-icon: #000000;
+   --df-messenger-user-message: #00ff62;
+   --df-messenger-button-titlebar-font-color:#000000;	 /* Color do titulo*/
+  }
+
+/* Mover o widget do Dialogflow */
+df-messenger {
+  position: fixed !important;
+  bottom: 80px !important; /* sobe o chat para não ficar colado no nav */
+  right: 50px !important;
+  z-index: 9999 !important; /* garante que fique acima do conteúdo */
+}
+
+/* Ajustar a janela de chat aberta */
+df-messenger chat-wrapper {
+  bottom: 80px !important;
+}
+
+@media (max-width: 768px) {
+  df-messenger {
+    bottom: 80px !important; /* sobe o chat no mobile */
+    right: 15px !important;
+  }
+}
+
+</style>
+<footer class="footer">
+ <!-- FAIXA DEGRADÊ -->
+  <div class="footer-strip"></div>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <div class="footer-main">
+
+    <!-- COLUNA 1 - LOGO -->
+    <div class="footer-col footer-col-logo">
+      <img class="footer-logo" src="/assets/img/width_550.png" alt="Logo Veloz">
+
+      <p class="footer-text">
+        Veloz Química Derivados de Petróleo e Solventes Ltda.
+        <br>
+        Av. Getúlio Vargas, s/n<br>
+        CNPJ: 04.051.523/0001-18 - I.E: 15 213765-3 <br>
+        Quim. Resp: Karine Cardoso C. Pastana <br>
+        CR!. 06201025 - 6ª Região
+      </p>
+    </div>
+
+    <!-- COLUNA 2 - SELOS / REDES -->
+    <div class="footer-col footer-col-selos">
+
+      <div class="selos-top">
+     <img src="https://i.postimg.cc/RVb2DmtT/Isso-9001.png" alt="">
+      <img class="selo-quadrado" src="https://i.postimg.cc/Zn5DwsKX/SELO-ABRAFATI.png" alt="">
+ 
+
+      </div>
+        <div class="selos-middle">
+  <img src="selo-meio.png" alt="">
+
+  <div class="social-icons">
+    <a href="https://www.instagram.com/veloztintas" aria-label="Instagram">
+      <img
+        src="https://cdn.simpleicons.org/instagram/000"
+        class="footer-social"
+        alt="Instagram">
+    </a>
+
+    <a href="https://www.facebook.com/veloztintas" aria-label="Facebook">
+      <img
+        src="https://cdn.simpleicons.org/facebook/000"
+        class="footer-social"
+        alt="Facebook">
+    </a>
+  </div>
+  <img src="https://i.postimg.cc/XJwjmcX9/nopara.png" alt="">
+  <br>
+    <img class="ok" src="https://i.postimg.cc/3RVnZ8Vx/SAC-Veloz.png" alt="">
+</div>
+
+      
+
+    </div>
+
+    <!-- COLUNA 3 - MENU -->
+    <div class="footer-col footer-col-menu">
+
+      <div class="menu-col">
+        <h4>Empresa</h4>
+        <ul>
+          <li><a href="">História</a></li>
+          <li>Produtos</li>
+          <li>Certificações</li>
+          <li>Download</li>
+        </ul>
+      </div>
+
+      <div class="menu-col">
+        <h4>Contato</h4>
+        <ul>
+          <li>Fale conosco</li>
+          <li>Marketing</li>
+          <li>Comercial</li>
+          <li>Trabalhe conosco</li>
+        </ul>
+      </div>
+
+      <div class="menu-col">
+        <h4>Serviços</h4>
+        <ul>
+          <li>Área do Pintor</li>
+          <li>Loja parceira</li>
+          <li>Cálculo de tinta</li>
+          <li>Escolha a cor</li>
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+
+  </footer>
+</body>
+</html>
+  <script src="/assets/js/main.js"></script>
+<script src="/simuladordecores/simulador.js"></script>

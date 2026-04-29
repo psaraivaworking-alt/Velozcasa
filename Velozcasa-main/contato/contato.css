@@ -1,0 +1,71 @@
+/* --- ESTILO CONTATO INSPIRADO NA IMAGEM --- */
+
+.page-header-contact {
+    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://i.postimg.cc/6p369hw2/Campanha-trimestral-(1).jpg');
+    background-size: cover;
+    background-position: center;
+    padding: 100px 0;
+    text-align: center;
+    color: white;
+}
+
+.page-header-contact h1 { font-size: 3rem; margin-bottom: 10px; }
+
+.contact-section { padding: 80px 0; background: #fff; }
+
+.contact-grid-layout {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 50px;
+    align-items: start;
+}
+
+/* Formulário */
+.contact-form-container h2 { font-size: 2rem; color: var(--roxo-escuro); margin-bottom: 15px; }
+.contact-form-container p { color: #777; margin-bottom: 30px; }
+
+.input-group { margin-bottom: 20px; }
+.input-group label { display: block; font-weight: 600; margin-bottom: 8px; color: #333; font-size: 14px; }
+.input-group input, .input-group textarea {
+    width: 100%; padding: 12px 15px; border: 1px solid #e0e0e0;
+    border-radius: 5px; outline: none; background: #fdfdfd; transition: 0.3s;
+}
+.input-group input:focus, .input-group textarea:focus { border-color: var(--roxo-veloz); box-shadow: 0 0 5px rgba(82, 37, 158, 0.1); }
+
+.btn-send {
+    background: #b820df; /* Laranja da imagem */
+    color: white; border: none; padding: 15px 40px;
+    border-radius: 5px; font-weight: bold; cursor: pointer;
+    transition: 0.3s; width: 100%; font-size: 16px;
+}
+.btn-send:hover { background: #820ba0; transform: translateY(-2px); }
+
+/* Cards Laterais */
+.contact-info-cards { display: flex; flex-direction: column; gap: 20px; }
+
+.info-card-static {
+    background: #f8f9fa;
+    padding: 30px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: 0.3s;
+}
+
+.icon-circle {
+    width: 60px; height: 60px; background: white;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.icon-circle img { width: 25px; filter: invert(34%) sepia(87%) saturate(2250%) hue-rotate(270deg) brightness(101%) contrast(105%); } /* Cor laranja */
+
+.info-card-static h3 { font-size: 18px; color: var(--roxo-escuro); margin-bottom: 5px; }
+.info-card-static p { color: #666; font-size: 15px; margin: 0; }
+
+/* Responsividade */
+@media (max-width: 900px) {
+    .contact-grid-layout { grid-template-columns: 1fr; }
+    .page-header-contact h1 { font-size: 2.2rem; }
+}
