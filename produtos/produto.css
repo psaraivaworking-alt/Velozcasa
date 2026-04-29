@@ -271,7 +271,9 @@ header .branco { background: var(--roxo-veloz); width: 100%; display: flex; just
 
 
 
-
+.menu-col ul li a {
+  text-decoration: none; color: #1d1d1f;
+}
 .selos-middle img {
   height: 50px;
 }

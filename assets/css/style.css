@@ -105,11 +105,19 @@ header .branco { background: var(--roxo-veloz); width: 100%; display: flex; just
 .menu-col h4 { font-size: 14px; margin-bottom: 12px; }
 .menu-col ul { list-style: none; }
 .menu-col li { font-size: 13px; margin-bottom: 8px; cursor: pointer; }
+.menu-col ul li a {
+  text-decoration: none; color: #1d1d1f;
+}
+
 img.ok{
   width: auto;
   height: 27px;   /* ajusta aqui */
   object-fit: contain;
  }
+
+
+ 
+
 
 /* --- MOBILE --- */
 .hamburger { display: none; background: none; border: none; color: var(--roxo-veloz); font-size: 30px; cursor: pointer; }

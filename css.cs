@@ -27,6 +27,10 @@
 }
 
 
+.menu-col ul li a {
+  text-decoration: none;
+}
+
 
 /* RESET E CONFIGURAÇÕES GERAIS */
 * { 
