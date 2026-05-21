@@ -55,13 +55,6 @@
 
 
 
-
-
-
-
-
-
-
 body {
   background: var(--cinza);
   color: #333;
@@ -70,8 +63,11 @@ body {
   flex-direction: column;
 }
 
-main { flex: 1; }
-
+main { 
+  flex: 1; 
+  width: 100%;
+  overflow-x: hidden; /* Se algo tentar sair da margem, o navegador corta e não cria a barra de rolagem lateral */
+}
 .container { 
   width: 90%; 
   max-width: 1200px; 
