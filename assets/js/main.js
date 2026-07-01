@@ -37,4 +37,29 @@ document.addEventListener("contextmenu", e => e.preventDefault());
 
    ========================================== */
 
-  
+  document.addEventListener("DOMContentLoaded", function () {
+  const mosaicItems = document.querySelectorAll(".mosaic-custom-grid .mosaic-item");
+  const productLists = document.querySelectorAll(".mosaic-products-area .products-list");
+
+  mosaicItems.forEach((item) => {
+    item.addEventListener("click", function () {
+      // 1. Remove classe ativa de todas as imagens do mosaico
+      mosaicItems.forEach((i) => i.classList.remove("active"));
+      
+      // 2. Adiciona classe ativa na imagem clicada
+      this.classList.add("active");
+
+      // 3. Pega o identificador do target
+      const targetId = this.getAttribute("data-target");
+
+      // 4. Esconde todas as listas de produtos
+      productLists.forEach((list) => list.classList.remove("active"));
+
+      // 5. Mostra apenas a lista correspondente
+      const targetList = document.getElementById(`prod-${targetId}`);
+      if (targetList) {
+        targetList.classList.add("active");
+      }
+    });
+  });
+});

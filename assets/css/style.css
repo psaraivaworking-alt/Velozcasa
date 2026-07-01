@@ -37,17 +37,7 @@
   font-family: 'Noto Sans JP', sans-serif; 
 }
 
-/* Estilo do Preloader (Adicionado para funcionar com seu JS) */
-#preloader {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: #fff;
-  z-index: 9999;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+
 html, body {
   overflow-x: hidden; /* Impede o scroll horizontal global */
   width: 100%;
@@ -75,8 +65,18 @@ main { flex: 1; }
   margin: 0 auto; 
 }
 
+
 /* --- HEADER --- */
-header { padding-top: 16px; background: white; }
+header { 
+  padding-top: 16px; 
+  background: white;  
+  /* Ajustes para fixar o header no topo */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+}
 .header-top { display: flex; align-items: center; justify-content: space-between; padding-bottom: 16px; }
 .logo { height: 70px; }
 .search-social { display: flex; align-items: center; gap: 20px; flex-grow: 1; justify-content: flex-end; margin-right: 20px; }
@@ -113,26 +113,25 @@ img.ok{
   width: auto;
   height: 27px;   /* ajusta aqui */
   object-fit: contain;
- }
-
-
- 
-
+}
 
 /* --- MOBILE --- */
-.hamburger { display: none; background: none; border: none; color: var(--roxo-veloz); font-size: 30px; cursor: pointer; }
+.hamburger { display: none; background: none; border: none; color: var(--roxo-veloz); font-size: 30px; cursor: pointer; z-index: 999999999999999999999999999999999999999999999; }
 
 @media (max-width: 900px) {
   .nav-desktop, .search-social { display: none; }
-  .hamburger { display: block; }
+  .hamburger { display: block;  }
   .footer-main { grid-template-columns: 1fr; text-align: center; }
   .footer-logo { margin: -120px auto 0; }
   .selos-top, .selos-middle, .social-icons { justify-content: center; }
   .footer-col-menu { grid-template-columns: 1fr; gap: 25px; }
 }
 
-.menu-mobile { position: fixed; top: 0; right: -100%; width: 280px; height: 100vh; background: var(--roxo-escuro); padding: 30px; z-index: 100; transition: 0.4s; }
-.menu-mobile.active { right: 0; }
+
+
+
+.menu-mobile { position: fixed; top: 0; right: -100%; width: 280px; height: 100vh; background: var(--roxo-escuro); padding: 30px; z-index: 100; transition: 0.4s;  z-index: 99999999999999999999999999999999999999;}
+.menu-mobile.active { right: 0;  }
 .nav-mobile { display: flex; flex-direction: column; margin-top: 40px; }
 .nav-mobile a { color: white; text-decoration: none; font-size: 18px; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
 .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; z-index: 90; }
@@ -165,24 +164,209 @@ img.ok{
 
 /* 1. HERO BANNER (LIMPO) */
 /* 1. Hero */
-.hero-clean img { width: 100%; height: auto; display: block; }
+.hero-clean img { width: 100%; height: auto; display: block; margin-top: 155px; }
 
-/* 2. Mosaico */
-.mosaic-section { padding: 80px 0; background: #fff; }
-.section-header { text-align: center; margin-bottom: 50px; }
-.badge { background: #f4f4f9; color: var(--roxo-veloz); padding: 6px 16px; border-radius: 50px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; display: inline-block; }
-.section-header h2 { font-size: clamp(28px, 4vw, 42px); color: var(--dark-veloz); margin: 15px 0; font-weight: 800; }
-.line-detail { width: 50px; height: 5px; background: var(--azul-veloz); margin: 0 auto; border-radius: 10px; }
+/* ==========================================================================
+   MOSAICO COM ESTRUTURA NOVA E ESTILO ORIGINAL (01)(02)(XX)
+   ========================================================================== */
 
-.mosaic-grid { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 300px); gap: 20px; width: 90%; max-width: 1200px; margin: 0 auto; }
-.mosaic-item { border-radius: 30px; background-size: cover; background-position: center; position: relative; overflow: hidden; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
-.mosaic-item:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
-.mosaic-item::after { content: ''; position: absolute; inset: 0; background: linear-gradient(transparent 40%, rgba(0,0,0,0.7)); }
-.mosaic-item span, .mosaic-overlay { position: absolute; bottom: 25px; left: 25px; color: #fff; z-index: 2; }
-.mosaic-item h3 { font-size: 24px; font-weight: 700; margin-bottom: 5px; }
-.mosaic-item p { font-size: 14px; opacity: 0.8; }
-.mosaic-item.big { grid-column: span 2; grid-row: span 2; }
-.mosaic-item.wide { grid-column: span 2; }
+.mosaic-section { 
+  padding: 80px 0; 
+  background: #fff; 
+}
+
+.section-header { 
+  text-align: center; 
+  margin-bottom: 50px; 
+}
+
+.badge { 
+  background: #f4f4f9; 
+  color: var(--roxo-veloz); 
+  padding: 6px 16px; 
+  border-radius: 50px; 
+  font-size: 11px; 
+  font-weight: 800; 
+  text-transform: uppercase; 
+  letter-spacing: 1px; 
+  display: inline-block; 
+}
+
+.section-header h2 { 
+  font-size: clamp(28px, 4vw, 42px); 
+  color: var(--dark-veloz); 
+  margin: 15px 0; 
+  font-weight: 800; 
+}
+
+.line-detail { 
+  width: 50px; 
+  height: 5px; 
+  background: var(--azul-veloz); 
+  margin: 0 auto; 
+  border-radius: 10px; 
+}
+
+/* NOVO GRID - Mantendo largura e margens do seu original */
+.mosaic-custom-grid { 
+  display: grid; 
+  grid-template-columns: 1.2fr 1fr 1.3fr; /* (01) (02) (XX) */
+  grid-template-rows: repeat(2, 300px); /* Mantido os 300px originais por linha */
+  gap: 20px; 
+  width: 90%; 
+  max-width: 1200px; 
+  margin: 0 auto; 
+}
+
+/* ITENS DO MOSAICO - Idênticos aos seus originais */
+.mosaic-item { 
+  border-radius: 30px; 
+  background-size: cover; 
+  background-position: center; 
+  position: relative; 
+  overflow: hidden; 
+  transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
+  cursor: pointer; 
+  border: 3px solid transparent; /* Preparado para o estado active */
+}
+
+.mosaic-item:hover { 
+  transform: translateY(-10px); 
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1); 
+}
+
+.mosaic-item::after { 
+  content: ''; 
+  position: absolute; 
+  inset: 0; 
+  background: linear-gradient(transparent 40%, rgba(0,0,0,0.7)); 
+}
+
+.mosaic-item span, .mosaic-overlay { 
+  position: absolute; 
+  bottom: 25px; 
+  left: 25px; 
+  color: #fff; 
+  z-index: 2; 
+}
+
+.mosaic-item h3 { 
+  font-size: 24px; 
+  font-weight: 700; 
+  margin-bottom: 5px; 
+}
+
+.mosaic-item p { 
+  font-size: 14px; 
+  opacity: 0.8; 
+}
+
+/* Estado Ativo do Item Clicado */
+.mosaic-item.active {
+  border-color: var(--roxo-veloz);
+  box-shadow: 0 10px 25px rgba(82, 37, 158, 0.2);
+}
+
+/* Posicionamento do Novo Layout */
+.mosaic-item.item-01 { 
+  grid-column: 1; 
+  grid-row: span 2; 
+}
+
+.mosaic-item.item-02 { 
+  grid-column: 2; 
+  grid-row: 1; 
+}
+
+.mosaic-item.item-03 { 
+  grid-column: 2; 
+  grid-row: 2; 
+}
+
+/* ÁREA XX - Lista de Produtos Integrada ao Design Original */
+.mosaic-products-area { 
+  grid-column: 3; 
+  grid-row: span 2; 
+  background: var(--cinza-fundo); 
+  border-radius: 30px; 
+  padding: 35px; 
+  display: flex; 
+  flex-direction: column;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.02);
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+.products-list { 
+  display: none; 
+  flex-direction: column; 
+  height: 100%; 
+}
+
+.products-list.active { 
+  display: flex; 
+  animation: pageFadeUp 0.4s ease forwards; 
+}
+
+.products-list h4 { 
+  font-size: 20px; 
+  color: var(--dark-veloz); 
+  margin-bottom: 25px; 
+  font-weight: 800; 
+  border-bottom: 2px solid rgba(0,0,0,0.05);
+  padding-bottom: 12px;
+}
+
+.products-wrapper { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 15px; 
+  overflow-y: auto; 
+}
+
+/* Links dos Produtos Estilizados no Padrão Premium */
+.product-link-item { 
+  display: block; 
+  padding: 16px 20px; 
+  background: #ffffff; 
+  color: var(--dark-veloz); 
+  text-decoration: none; 
+  font-weight: 700; 
+  font-size: 14px; 
+  border-radius: 20px; 
+  transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+  border: 1px solid rgba(0,0,0,0.05);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+}
+
+.product-link-item:hover { 
+  background: var(--roxo-veloz); 
+  color: #ffffff; 
+  transform: translateX(8px); 
+  box-shadow: 0 10px 20px rgba(82, 37, 158, 0.15); 
+}
+
+/* RESPONSIVIDADE ORIGINAL MANTIDA (Com empilhamento seguro no Mobile) */
+@media (max-width: 900px) {
+  .mosaic-custom-grid { 
+    display: flex; 
+    flex-direction: column; 
+    width: 90%;
+    gap: 20px; 
+  }
+  
+  .mosaic-item.item-01, 
+  .mosaic-item.item-02, 
+  .mosaic-item.item-03 { 
+    width: 100% !important; 
+    height: 250px; 
+  }
+  
+  .mosaic-products-area { 
+    width: 100%; 
+    min-height: 300px; 
+    padding: 25px; 
+  }
+}
 
 /* 3. Simulador (Correção de Imagem Estourada) */
 /* --- SEÇÃO SIMULADOR PREMIUM --- */
@@ -245,13 +429,6 @@ img.ok{
 
 
 /* CONTAINER DA ORBITA (o anel gira ao redor da imagem) */
-
-
-
-
-
-
-
 
 
 
@@ -358,19 +535,6 @@ img.ok{
 @keyframes float270 { 0%, 100% { transform: translate(-50%,-50%) rotate(270deg) translateX(var(--orbit-radius)) translateY(0); } 50% { transform: translate(-50%,-50%) rotate(270deg) translateX(var(--orbit-radius)) translateY(-15px); } }
 @keyframes float300 { 0%, 100% { transform: translate(-50%,-50%) rotate(300deg) translateX(var(--orbit-radius)) translateY(0); } 50% { transform: translate(-50%,-50%) rotate(300deg) translateX(var(--orbit-radius)) translateY(-15px); } }
 @keyframes float330 { 0%, 100% { transform: translate(-50%,-50%) rotate(330deg) translateX(var(--orbit-radius)) translateY(0); } 50% { transform: translate(-50%,-50%) rotate(330deg) translateX(var(--orbit-radius)) translateY(-15px); } }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -492,8 +656,3 @@ img.ok{
   .partner-card { height: 380px; padding: 30px; }
 }
 
-/* --- 
-
-
-
-*/
