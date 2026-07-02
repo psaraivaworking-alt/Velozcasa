@@ -53,114 +53,89 @@
     </nav>
   </aside>
   <div class="overlay" id="overlay"></div>
-<main class="prisma-page">
-  <div class="prisma-onboarding" style="max-width: 1000px; margin: 0 auto 50px; padding: 0 20px;">
-    
-    <div class="concept-card" style="background: #fff; padding: 40px; border-radius: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.03); margin-bottom: 30px; border-bottom: 4px solid var(--roxo-veloz);">
-        <span class="badge" style="background: #f0ebff; color: var(--roxo-veloz); padding: 6px 16px; border-radius: 50px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">Tecnologia de Ponta</span>
-        <h2 style="font-size: 32px; font-weight: 800; color: #1a1a1a; margin: 15px 0; letter-spacing: -1px;">O que é o Veloz Prisma?</h2>
-        <p style="font-size: 17px; color: #555; line-height: 1.7; max-width: 850px;">
-            O <strong>Veloz Prisma</strong> é a nossa ferramenta de inteligência visual que elimina as dúvidas na hora de reformar. Ele traduz as cores reais do nosso catálogo para comandos técnicos (prompts) que as IAs entendem perfeitamente. Assim, você visualiza o resultado final com fidelidade absoluta de tons, luzes e sombras antes de abrir a primeira lata de tinta.
-        </p>
-    </div>
 
-    <div class="how-to-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px;">
-        
-        <div class="step-item" style="background: #fdfdfd; padding: 25px; border-radius: 24px; border: 1px solid #eee; transition: 0.3s;">
-            <div style="width: 40px; height: 40px; background: var(--roxo-veloz); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; margin-bottom: 15px;">1</div>
-            <h4 style="font-weight: 700; margin-bottom: 10px; color: #1a1a1a;">Configure</h4>
-            <p style="font-size: 14px; color: #777; line-height: 1.5;">Selecione a área (parede, piso ou telhado) e escolha a cor desejada.</p>
-        </div>
-
-        <div class="step-item" style="background: #fdfdfd; padding: 25px; border-radius: 24px; border: 1px solid #eee; transition: 0.3s;">
-            <div style="width: 40px; height: 40px; background: var(--roxo-veloz); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; margin-bottom: 15px;">2</div>
-            <h4 style="font-weight: 700; margin-bottom: 10px; color: #1a1a1a;">Gere o Prompt</h4>
-            <p style="font-size: 14px; color: #777; line-height: 1.5;">O sistema cria o comando técnico exato com códigos HEX e RGB oficiais.</p>
-        </div>
-
-        <div class="step-item" style="background: #fdfdfd; padding: 25px; border-radius: 24px; border: 1px solid #eee; transition: 0.3s;">
-            <div style="width: 40px; height: 40px; background: var(--roxo-veloz); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; margin-bottom: 15px;">3</div>
-            <h4 style="font-weight: 700; margin-bottom: 10px; color: #1a1a1a;">Copie e Cole</h4>
-            <p style="font-size: 14px; color: #777; line-height: 1.5;">Clique em copiar, abra o Gemini no botão e envie junto com uma foto do seu ambiente.</p>
-        </div>
-
-    </div>
-</div>
-    <section class="prisma-hero-header">
-        <div class="container">
-            <span class="badge">IA & Design</span>
-            <h1>Veloz <span class="text-purple">Prisma</span></h1>
-            <p>A tecnologia que transforma sua dúvida em decisão. Use a inteligência artificial para visualizar as <strong>Tintas Veloz</strong> no seu ambiente real antes mesmo de abrir a lata.</p>
-        </div>
-    </section>
-
+<main class="color-veloz-page">
+  <!-- 1. EXPLICA: Cabeçalho & Conceito -->
+  <section class="color-hero-header">
     <div class="container">
-        <div class="prisma-card-main">
-            
-            <div class="prisma-config">
-                <div class="config-step">
-                    <span class="step-tag">01. Onde vamos aplicar?</span>
-                    <div class="area-selector-modern">
-                        <button class="area-card active" onclick="setArea('Parede', this, 'https://s2.glbimg.com/rYVPpm8iHRRGsqziuHgyCyGH-U0=/620x455/e.glbimg.com/og/ed/f/original/2015/12/10/quarto-arquiteta-andrea-murao-roxo-cabeceira-patchwork.jpg')">
-                            <div class="area-img" style="background-image: url('https://s2.glbimg.com/rYVPpm8iHRRGsqziuHgyCyGH-U0=/620x455/e.glbimg.com/og/ed/f/original/2015/12/10/quarto-arquiteta-andrea-murao-roxo-cabeceira-patchwork.jpg')"></div>
-                            <span>Parede</span>
-                        </button>
-                        <button class="area-card" onclick="setArea('Telhado', this, 'https://api.aecweb.com.br/tematico/img_figuras/telha-ceramica.webp')">
-                            <div class="area-img" style="background-image: url('https://api.aecweb.com.br/tematico/img_figuras/telha-ceramica.webp')"></div>
-                            <span>Telhado</span>
-                        </button>
-                        <button class="area-card" onclick="setArea('Piso', this, 'https://altipisos.com.br/wp-content/uploads/2022/05/Artboard-1.png')">
-                            <div class="area-img" style="background-image: url('https://altipisos.com.br/wp-content/uploads/2022/05/Artboard-1.png')"></div>
-                            <span>Piso</span>
-                        </button>
-                    </div>
-                </div>
+      <span class="badge-hero">Color Veloz Studio</span>
+      <h1>A evolução na escolha da sua cor</h1>
+      <p>Escolher a cor ideal ficou mais simples. O Color Veloz utiliza a paleta oficial da Tintas Veloz e Inteligência Artificial para criar simulações realistas, permitindo visualizar o resultado no ambiente antes da aplicação da tinta.</p>    </div>
+  </section>
 
-                <div class="config-step">
-                    <span class="step-tag">02. Escolha sua tonalidade</span>
-                    <div class="modern-colors-grid">
-                        <div id="colorsContainer" class="colors-wrapper"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="prisma-view">
-                <div class="preview-stage">
-                    <div id="dynamicImage" class="main-preview-img" style="background-image: url('https://i.postimg.cc/yBt5GN0J/5a5bd2f7df9f69ec5b60de5e371cca7d.jpg');">
-                        <div class="color-overlay-preview" id="colorOverlay"></div>
-                        <div class="preview-info">
-                            <h4 id="displayAreaName">Parede</h4>
-                            <p id="displayColorName">Branco Polar</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="prompt-result-area">
-                    <div class="prompt-header">
-                        <span class="ai-status">Prompt Inteligente Gerado</span>
-                    </div>
-                    <div class="prompt-box" id="promptText">
-                        Selecione as opções ao lado...
-                    </div>
-                    <div class="prompt-actions">
-                        <button class="btn-action-veloz btn-copy" onclick="copyPrompt()">Copiar Prompt</button>
-                        <button class="btn-action-veloz btn-ai" onclick="openGemini()">Usar IA</button>
-                    </div>
-                </div>
-            </div>
-
+  <!-- 2. PRODUTO & COPIA IA: Metodologia e Linha de Solução -->
+  <div class="color-onboarding">
+    <div class="how-to-grid">
+      <div class="step-item">
+        <div class="step-icon-wrapper">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/></svg>
         </div>
+        <h4>1. Explore o Catálogo</h4>
+        <p>Navegue pelo nosso leque digital unificado. Cada bloco representa fielmente a pigmentação real das nossas tintas para parede.</p>
+      </div>
+      
+      <div class="step-item">
+        <div class="step-icon-wrapper">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+        </div>
+        <h4>2. Copie para a IA</h4>
+        <p>Ao selecionar uma cor, o sistema converte os dados em uma diretriz fotorealista. Clique em "Copiar Instruções".</p>
+      </div>
+
+      <div class="step-item">
+        <div class="step-icon-wrapper">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+        </div>
+        <h4>3. Simule no Gemini</h4>
+        <p>Clique em "Abrir IA", carregue a foto da sua própria parede e cole o texto enviado. Veja a mágica acontecer instantaneamente.</p>
+      </div>
     </div>
+  </div>
 
-    <section class="guarantee-veloz">
-        <div class="container">
-            <div class="guarantee-card">
-                <h3>Certeza absoluta? Só com a Veloz.</h3>
-                <p>Se você pintar e não gostar, a Tintas Veloz troca a tinta para você.</p>
-            </div>
+  <!-- 3. APLICAÇÃO DA IDEIA: Interface do Simulador -->
+  <div class="container">
+    <div class="color-card-main">
+      
+      <!-- Lado Esquerdo: Novo Leque de Cores Estilizado -->
+      <div class="color-config">
+        <div class="config-header-row">
+          <span class="step-tag">Leque de Cores Inteligente</span>
+          <span class="counter-badge" id="colorsCounterTotal">0 Cores</span>
         </div>
-    </section>
+        <div class="modern-colors-grid">
+          <div id="colorsContainer" class="colors-wrapper"></div>
+        </div>
+      </div>
+
+      <!-- Lado Direito: Controle de Ação e Status -->
+      <div class="color-view">
+        <div class="selection-status-card">
+          <span class="status-label">Tom Ativo Pronto para Cópia</span>
+          <div class="status-preview-row">
+            <div id="statusColorIndicator" class="status-indicator-circle"></div>
+            <div class="status-text-meta">
+              <h2 id="displayColorName">Selecione uma cor</h2>
+              <span id="displayColorHex">#000000</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="action-area-veloz">
+          <button class="btn-action-veloz btn-copy" onclick="copyPrompt()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            Copiar Instruções de Cor
+          </button>
+          <button class="btn-action-veloz btn-ai" onclick="openGemini()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+            Abrir Inteligência Artificial
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
 </main>
+
 
 <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
 <df-messenger
