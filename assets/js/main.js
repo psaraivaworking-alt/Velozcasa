@@ -63,3 +63,24 @@ document.addEventListener("contextmenu", e => e.preventDefault());
     });
   });
 });
+
+indow.addEventListener("load", () => {
+    const imagens = [...document.images];
+
+    let i = 0;
+
+    function carregarProxima() {
+        if (i >= imagens.length) return;
+
+        const img = imagens[i++];
+        
+        if (img.src) {
+            const preload = new Image();
+            preload.src = img.src;
+        }
+
+        setTimeout(carregarProxima, 300);
+    }
+
+    carregarProxima();
+});
