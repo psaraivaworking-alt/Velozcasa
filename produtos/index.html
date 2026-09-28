@@ -1,5 +1,28 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+  <script>
+document.addEventListener("DOMContentLoaded", () => {
+    const imagens = document.querySelectorAll("img");
+
+    imagens.forEach(img => {
+        const src = img.src;
+
+        if (src) {
+            const novaImagem = new Image();
+
+            novaImagem.onload = () => {
+                img.src = src;
+            };
+
+            novaImagem.onerror = () => {
+                console.warn("Erro ao carregar:", src);
+            };
+
+            novaImagem.src = src;
+        }
+    });
+});
+</script>
 <head>
   <meta charset="UTF-8">
   <title>Produtos | Tintas Veloz</title>
