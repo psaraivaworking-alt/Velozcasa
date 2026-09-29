@@ -1,454 +1,217 @@
-/* VARIÁVEIS DE CORES */
-:root {
-  --roxo-escuro: #2B0A3D;
-  --roxo-medio: #4B1C66;
-  --roxo-claro: #6F3A8A;
-  --roxo-veloz: #52259E; /* Sua cor principal */
-  --branco: #ffffff;
-  --azul-veloz: #3fa9f5;
-  --cinza: #f5f5f7;
-  --branco: #ffffff;
-  --cinza-fundo: #f9f9fb;
-  --dark-veloz: #1a1a1a;
-  --cinza-claro: #f5f5f7;
-  --soft-bg: #f5f5f7;
-  --transicao-suave: 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-}
+/* ==========================================================================
+   HISTÓRIA — TINTAS VELOZ
+   Conceito: a linha central do tempo é um traço de tinta escorrendo —
+   começa escura (--roxo-escuro, as origens em 1998) e vai clareando até
+   o azul-veloz (2025), acompanhando a rolagem da página. Cada card "pinga"
+   na linha como uma gota, com leve desfoque que "seca" ao entrar em foco.
+   ========================================================================== */
 
-@keyframes pageFadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-
-
-
-/* RESET E CONFIGURAÇÕES GERAIS */
-* { 
-  margin: 0; 
-  padding: 0; 
-  box-sizing: border-box; 
-  font-family: 'Noto Sans JP', sans-serif; 
-}
-
-/* Estilo do Preloader (Adicionado para funcionar com seu JS) */
-#preloader {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
+/* ---------- HERO ---------- */
+.historia-hero {
   background: #fff;
-  z-index: 9999;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-html, body {
-  overflow-x: hidden; /* Impede o scroll horizontal global */
-  width: 100%;
-  position: relative;
+  padding: 70px 0 40px;
+  text-align: center;
 }
 
-/* Garante que imagens e grids não estoure o container */
-img {
-  max-width: 100%;
-  height: auto;
+.historia-hero-inner {
+  max-width: 780px;
 }
-body {
-  background: var(--cinza);
-  color: #333;
-  min-height: 100vh;
+
+.historia-hero h1 {
+  font-size: clamp(30px, 4.4vw, 46px);
+  font-weight: 800;
+  color: var(--dark-veloz);
+  line-height: 1.15;
+  margin: 18px 0 16px;
+}
+
+.historia-hero .line-detail { margin: 0 auto; }
+
+.historia-hero-lead {
+  margin-top: 20px;
+  font-size: 16px;
+  line-height: 1.7;
+  color: #555;
+}
+
+.text-purple { color: var(--roxo-veloz); }
+
+/* ---------- TIMELINE ---------- */
+/* Conceito: coluna de fotos à esquerda (como no mockup), texto à direita.
+   Conforme você rola, a foto do período que está sendo lido fica nítida e em
+   destaque; as demais permanecem em blur/preto-e-branco, como um álbum sendo
+   folheado. O anel de destaque muda de cor ao longo da linha do tempo —
+   do roxo mais escuro (1998) ao azul-veloz (2025) — mantendo o fio condutor
+   de cor que você gostou na primeira versão, sem depender de uma linha fixa. */
+
+.historia-timeline {
+  background: var(--cinza-fundo);
+  padding: 70px 0 40px;
+}
+
+.timeline-track {
   display: flex;
   flex-direction: column;
+  gap: 70px;
 }
 
-main { flex: 1; }
-
-.container { 
-  width: 90%; 
-  max-width: 1200px; 
-  margin: 0 auto; 
+.timeline-item {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  column-gap: 48px;
+  align-items: center;
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* --- HEADER --- */
-header { padding-top: 16px; background: white; }
-.header-top { display: flex; align-items: center; justify-content: space-between; padding-bottom: 16px; }
-.logo { height: 70px; }
-.search-social { display: flex; align-items: center; gap: 20px; flex-grow: 1; justify-content: flex-end; margin-right: 20px; }
-.search-bar input { padding: 8px 16px; border-radius: 20px; border: 1px solid #ddd; width: 280px; outline: none; }
-.social-links { display: flex; align-items: center; gap: 12px; color: black; font-size: 14px; }
-.social-icon { width: 22px; filter: black; transition: 0.3s; }
-/* --- NAVEGAÇÃO --- */
-header .branco { background: var(--roxo-veloz); width: 100%; display: flex; justify-content: center; }
-.nav-desktop { padding: 12px 0; display: flex; justify-content: center; align-items: center; gap: 20px; }
-.nav-desktop a { color: white; text-decoration: none; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 16px; border: 1px solid transparent; transition: 0.3s; }
-.nav-desktop a.here { background-color: var(--roxo-veloz); color: #fff; border-radius: 4px; font-weight: bold; border: 1px solid rgba(255, 255, 255, 0.4); box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); }
+.timeline-item.revealed { opacity: 1; transform: translateY(0); }
 
-/* --- FOOTER --- */
-.footer { background: #fff; width: 100%; }
-.footer-strip { height: 60px; width: 100%; background: var(--roxo-veloz); padding: 0;}
-.footer-main { max-width: 1280px; margin: 0 auto; padding: 60px 40px; display: grid; grid-template-columns: 1.2fr 1fr 1.5fr; gap: 40px; align-items: flex-start; }
-.footer-col-logo { position: relative; margin-top: -16px; }
-.footer-logo { width: 220px; margin-top: -300px; }
-.footer-text { margin-top: 20px; font-size: 12px; color: #1d1d1f; line-height: 1.5; }
-.footer-col-selos { display: flex; flex-direction: column; gap: 25px; }
-.selos-top, .selos-middle { display: flex; gap: 20px; align-items: center; }
-.selos-top img, .selos-middle img { height: 50px; }
-.social-icons { display: flex; gap: 12px; }
-.footer-social { width: 24px; height: 24px; filter: brightness(0); transition: 0.3s; }
-.footer-col-menu { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
-.menu-col h4 { font-size: 14px; margin-bottom: 12px; }
-.menu-col ul { list-style: none; }
-.menu-col li { font-size: 13px; margin-bottom: 8px; cursor: pointer; }
-img.ok{
-  width: auto;
-  height: 27px;   /* ajusta aqui */
-  object-fit: contain;
- }
+/* cores do período, do roxo-escuro (1998) ao azul-veloz (2025) */
+.timeline-item:nth-child(1) { --accent: #2B0A3D; }
+.timeline-item:nth-child(2) { --accent: #2E1E54; }
+.timeline-item:nth-child(3) { --accent: #30326B; }
+.timeline-item:nth-child(4) { --accent: #334682; }
+.timeline-item:nth-child(5) { --accent: #355A99; }
+.timeline-item:nth-child(6) { --accent: #3868AD; }
+.timeline-item:nth-child(7) { --accent: #3A81C7; }
+.timeline-item:nth-child(8) { --accent: #3D95DE; }
+.timeline-item:nth-child(9) { --accent: #3FA9F5; }
 
-/* --- MOBILE --- */
-.hamburger { display: none; background: none; border: none; color: var(--roxo-veloz); font-size: 30px; cursor: pointer; }
+/* leve efeito de "colagem" — cada foto com um tombo/deslocamento sutil,
+   independente do estado de foco (que fica no elemento interno) */
+.timeline-photo { justify-self: center; }
+.timeline-item:nth-child(odd) .timeline-photo { transform: rotate(-3deg); }
+.timeline-item:nth-child(even) .timeline-photo { transform: rotate(2.5deg); }
+.timeline-item:nth-child(3n) .timeline-photo { transform: rotate(-2deg); }
 
+.photo-frame {
+  width: 260px;
+  height: 260px;
+  padding: 10px;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 18px 40px rgba(20, 10, 40, 0.12);
+  transition: box-shadow 0.6s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.photo-frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+  filter: blur(3px) grayscale(65%) brightness(0.95);
+  transform: scale(0.94);
+  transition: filter 0.6s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* foto em destaque: a que corresponde ao trecho sendo lido no momento */
+.timeline-item.active .photo-frame {
+  box-shadow: 0 0 0 4px var(--accent), 0 26px 50px rgba(20, 10, 40, 0.22);
+  transform: rotate(0deg) scale(1.04);
+}
+.timeline-item.active .photo-frame img {
+  filter: blur(0) grayscale(0%) brightness(1);
+  transform: scale(1);
+}
+
+.timeline-card {
+  background: #fff;
+  border-radius: 24px;
+  padding: 32px 34px;
+  box-shadow: 0 20px 45px rgba(43, 10, 61, 0.06);
+  border: 1px solid #efeef5;
+  border-left: 3px solid var(--accent);
+  transition: border-color 0.6s ease;
+}
+
+.timeline-year {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  padding: 4px 12px;
+  border-radius: 50px;
+  margin-bottom: 12px;
+  transition: color 0.6s ease, background 0.6s ease;
+}
+
+.timeline-card h3 {
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--dark-veloz);
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+
+.timeline-card p {
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: #5b5b62;
+}
+
+/* ---------- FECHO ---------- */
+.historia-closing { padding: 20px 0 90px; background: var(--cinza-fundo); }
+
+.closing-card {
+  background: linear-gradient(135deg, var(--roxo-escuro), var(--roxo-veloz));
+  border-radius: 40px;
+  padding: 60px 60px;
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+  color: #fff;
+  box-shadow: 0 40px 80px rgba(43, 10, 61, 0.25);
+}
+
+.closing-card .badge-light {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.closing-card p {
+  margin-top: 20px;
+  font-size: 16px;
+  line-height: 1.85;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* ---------- MOBILE ---------- */
 @media (max-width: 900px) {
-  .nav-desktop, .search-social { display: none; }
-  .hamburger { display: block; }
-  .footer-main { grid-template-columns: 1fr; text-align: center; }
-  .footer-logo { margin: -120px auto 0; }
-  .selos-top, .selos-middle, .social-icons { justify-content: center; }
-  .footer-col-menu { grid-template-columns: 1fr; gap: 25px; }
-}
-
-.menu-mobile { position: fixed; top: 0; right: -100%; width: 280px; height: 100vh; background: var(--roxo-escuro); padding: 30px; z-index: 100; transition: 0.4s; }
-.menu-mobile.active { right: 0; }
-.nav-mobile { display: flex; flex-direction: column; margin-top: 40px; }
-.nav-mobile a { color: white; text-decoration: none; font-size: 18px; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
-.overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; z-index: 90; }
-.overlay.active { display: block; }
-
-.page-indicator { 
-  background: #a86cac; 
-  color: white; 
-  padding: 12px 0; 
-  font-weight: 700; 
-  text-transform: uppercase; 
-  font-size: 14px; 
-}
-
-
-main { flex: 1; }
-
-
-
-
-/* --- SLIDER HERO AJUSTADO --- */
-
-.journey-container {
-    position: relative;
-    width: 100%;
-    height: 60vh; /* Altura menor, padrão Hero */
-    min-height: 400px;
-    overflow: hidden;
-    background: #000;
-}
-
-.slider {
-    position: relative;
-    width: 100%;
-    height: 100%;
-}
-
-.slide {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    visibility: hidden;
-    transition: transform 1.2s cubic-bezier(0.7, 0, 0.3, 1), opacity 0.8s;
-    z-index: 1;
-}
-
-/* Animação Original: Slide vindo da direita */
-.slide.active {
-    opacity: 1;
-    visibility: visible;
-    z-index: 2;
-    transform: translateX(0);
-}
-
-/* Preparação para entrada e saída lateral */
-.slide.next-stage { transform: translateX(100%); }
-.slide.prev-stage { transform: translateX(-100%); }
-
-.slide img {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    filter: brightness(0.5); /* Escurece para o texto brilhar */
-    z-index: 1;
-}
-
-/* Conteúdo do Slide */
-.slide-content {
-    position: relative;
-    z-index: 10;
-    color: white;
-    text-align: center;
-    padding: 0 20px;
-    max-width: 800px;
-}
-
-.slide-content span {
-    display: block;
-    font-size: 14px;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    color: var(--azul-veloz);
-    margin-bottom: 10px;
-    font-weight: 700;
-}
-
-.slide-content h2 {
-    font-size: clamp(2rem, 5vw, 3rem);
-    margin-bottom: 15px;
-    text-transform: uppercase;
-}
-
-.slide-content p {
-    font-size: 1.1rem;
-    opacity: 0.9;
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-/* Barra de Navegação e Progresso */
-.slider-nav {
-    position: absolute;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 20;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-.nav-btn {
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,255,255,0.3);
-    color: white;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.nav-btn:hover {
-    background: var(--roxo-veloz);
-    border-color: var(--roxo-veloz);
-}
-
-.progress-container {
-    width: 120px;
-    height: 3px;
-    background: rgba(255,255,255,0.3);
-    border-radius: 2px;
-}
-
-.progress-fill {
-    height: 100%;
-    background: var(--azul-veloz);
-    width: 33.3%;
-    transition: width 0.6s ease;
-}
-
-/* Contador */
-.slide-counter {
-    position: absolute;
-    top: 30px;
-    right: 5%;
-    color: white;
-    font-weight: 700;
-    font-size: 14px;
-    z-index: 20;
-    letter-spacing: 2px;
-}
-
-.slide-counter .current {
-    color: var(--azul-veloz);
-    font-size: 20px;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* Configurações de Títulos */
-.section-header { margin-bottom: 40px; text-align: center; }
-.subtitle { display: block; color: var(--roxo-veloz); font-weight: 700; text-transform: uppercase; letter-spacing: 2px; font-size: 14px; margin-bottom: 10px; }
-.title { font-size: 32px; color: var(--roxo-escuro); position: relative; padding-bottom: 15px; }
-.title::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 60px; height: 3px; background: var(--azul-veloz); }
-
-/* Seção Sobre */
-.about-section { padding: 80px 0; }
-.about-content { max-width: 800px; margin: 0 auto; text-align: center; line-height: 1.8; color: #555; font-size: 17px; }
-
-/* --- SEÇÃO MISSÃO E VALORES (REESTILIZADA) --- */
-.mission-section {
-    background: linear-gradient(135deg, var(--roxo-escuro) 0%, #1a0626 100%);
-    padding: 100px 0;
-    position: relative;
-    overflow: hidden;
-}
-
-/* Detalhe decorativo de fundo */
-.mission-section::after {
-    content: '';
-    position: absolute;
-    top: -100px;
-    right: -100px;
-    width: 300px;
-    height: 300px;
-    background: var(--roxo-veloz);
-    filter: blur(150px);
-    opacity: 0.3;
-    border-radius: 50%;
-}
-
-.mission-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 60px;
-    align-items: center;
-}
-
-/* Lado Esquerdo: Texto */
-.mission-text .subtitle {
-    display: inline-block;
-    font-size: 13px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    margin-bottom: 15px;
-    border-bottom: 2px solid var(--azul-veloz);
-    padding-bottom: 5px;
-}
-
-.mission-text .title {
-    font-size: 42px;
-    line-height: 1.1;
-    margin-bottom: 25px;
-    font-weight: 800;
-}
-
-.mission-text p {
-    font-size: 18px;
-    line-height: 1.8;
-    max-width: 500px;
-}
-
-/* Lado Direito: Lista de Valores */
-.values-list {
-    display: grid;
+  .timeline-track { gap: 50px; }
+  .timeline-item {
     grid-template-columns: 1fr;
-    gap: 15px;
+    justify-items: center;
+    text-align: center;
+    row-gap: 22px;
+  }
+  .timeline-item:nth-child(odd) .timeline-photo,
+  .timeline-item:nth-child(even) .timeline-photo,
+  .timeline-item:nth-child(3n) .timeline-photo { transform: rotate(-2deg); }
+
+  .photo-frame { width: 220px; height: 220px; }
+
+  .timeline-card { border-left: none; border-top: 3px solid var(--accent); }
+
+  .closing-card { padding: 44px 28px; border-radius: 28px; }
 }
 
-.value-item {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 20px 30px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    cursor: default;
-    position: relative;
-    overflow: hidden;
+@media (max-width: 560px) {
+  .timeline-card { padding: 24px 22px; }
+  .photo-frame { width: 190px; height: 190px; }
 }
 
-/* Efeito de Hover nos Cards */
-.value-item:hover {
-    background: rgba(255, 255, 255, 0.08);
-    transform: translateX(15px);
-    border-color: var(--azul-veloz);
-}
-
-.value-item::before {
-    content: '→';
-    position: absolute;
-    right: 20px;
-    color: var(--azul-veloz);
-    opacity: 0;
-    transition: 0.3s;
-    font-weight: bold;
-}
-
-.value-item:hover::before {
-    opacity: 1;
-    right: 25px;
-}
-
-.value-item span {
-    color: #fff;
-    font-size: 18px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-}
-
-/* Ajuste para o 4º item (Valorização das Pessoas) para destacar */
-.value-item:nth-child(4) {
-    border-left: 4px solid var(--azul-veloz);
-}
-
-/* Responsividade */
-@media (max-width: 900px) {
-    .mission-grid {
-        grid-template-columns: 1fr;
-        gap: 40px;
-        text-align: center;
-    }
-    .mission-text p {
-        margin: 0 auto;
-    }
-    .value-item:hover {
-        transform: translateY(-5px);
-    }
-}
-/* Timeline de História */
-.history-section { padding: 80px 0; }
-.timeline { position: relative; max-width: 800px; margin: 40px auto; padding-left: 50px; }
-.timeline::before { content: ''; position: absolute; left: 20px; top: 0; width: 2px; height: 100%; background: #ddd; }
-
-.timeline-item { position: relative; margin-bottom: 40px; }
-.timeline-item::before { content: ''; position: absolute; left: -35px; top: 5px; width: 12px; height: 12px; border-radius: 50%; background: var(--roxo-veloz); border: 3px solid white; box-shadow: 0 0 0 3px var(--roxo-veloz); z-index: 2; }
-
-.year { font-weight: 800; color: var(--roxo-veloz); font-size: 20px; margin-bottom: 5px; }
-.event { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-
-/* Ajuste Responsivo */
-@media (max-width: 768px) {
-    .mission-grid { grid-template-columns: 1fr; }
-    .values-list { grid-template-columns: 1fr; }
-    .timeline { padding-left: 30px; }
+/* ---------- ACESSIBILIDADE ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .timeline-item,
+  .photo-frame,
+  .photo-frame img,
+  .timeline-card {
+    transition: none !important;
+  }
+  .timeline-item { opacity: 1 !important; transform: none !important; }
+  .photo-frame img { filter: none !important; transform: none !important; }
 }

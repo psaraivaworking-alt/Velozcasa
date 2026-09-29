@@ -1,76 +1,42 @@
-// --- LÓGICA DO PRELOADER ---
-window.addEventListener("load", () => {
-  const preloader = document.getElementById("preloader");
-  if (preloader) {
-    preloader.style.opacity = "0"; // Ajustado para 0 (fade out)
-    preloader.style.transition = "opacity 0.5s ease";
-    
-    setTimeout(() => {
-      preloader.style.display = "none";
-    }, 500);
+document.addEventListener("DOMContentLoaded", () => {
+  const items = document.querySelectorAll(".timeline-item");
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (!items.length) return;
+
+  if (reduceMotion || !("IntersectionObserver" in window)) {
+    items.forEach((item, i) => {
+      item.classList.add("revealed");
+      if (i === 0) item.classList.add("active");
+    });
+    return;
   }
-});
 
-// --- LÓGICA DO MENU MOBILE ---
-document.addEventListener("DOMContentLoaded", () => {
-  const hamburger = document.querySelector(".hamburger");
-  const menuMobile = document.querySelector(".menu-mobile");
-  const overlay = document.querySelector(".overlay");
-  const closeBtn = document.getElementById("closeMenu");
+  // --- Revelação (fade + sobe), uma vez por item ---
+  const revealObserver = new IntersectionObserver(
+    entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("revealed");
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.15, rootMargin: "0px 0px -8% 0px" }
+  );
+  items.forEach(item => revealObserver.observe(item));
 
-  const toggleMenu = () => {
-    menuMobile.classList.toggle("active");
-    overlay.classList.toggle("active");
-  };
+  // --- Foto em destaque: só o item que cruza a faixa central da tela fica em foco ---
+  const activeObserver = new IntersectionObserver(
+    entries => {
+      entries.forEach(entry => {
+        entry.target.classList.toggle("active", entry.isIntersecting);
+      });
+    },
+    { threshold: 0, rootMargin: "-42% 0px -42% 0px" }
+  );
+  items.forEach(item => activeObserver.observe(item));
 
-  if (hamburger) hamburger.addEventListener("click", toggleMenu);
-  if (overlay) overlay.addEventListener("click", toggleMenu);
-  if (closeBtn) closeBtn.addEventListener("click", toggleMenu);
-});
-
-
-
-document.addEventListener("DOMContentLoaded", () => {
-    const slides = document.querySelectorAll(".slide");
-    const fill = document.querySelector(".progress-fill");
-    const currentTxt = document.querySelector(".slide-counter .current");
-    const nextBtn = document.querySelector(".next");
-    const prevBtn = document.querySelector(".prev");
-    
-    let index = 0;
-    const total = slides.length;
-
-    function updateSlider() {
-        slides.forEach(s => s.classList.remove("active"));
-        slides[index].classList.add("active");
-        
-        // Atualiza progresso e contador
-        const progress = ((index + 1) / total) * 100;
-        fill.style.width = `${progress}%`;
-        currentTxt.innerText = `0${index + 1}`;
-    }
-
-    function nextSlide() {
-        index = (index + 1) % total;
-        updateSlider();
-    }
-
-    function prevSlide() {
-        index = (index - 1 + total) % total;
-        updateSlider();
-    }
-
-    // Auto-play
-    let autoSwap = setInterval(nextSlide, 6000);
-
-    // Controles
-    nextBtn.addEventListener("click", () => {
-        nextSlide();
-        clearInterval(autoSwap);
-    });
-
-    prevBtn.addEventListener("click", () => {
-        prevSlide();
-        clearInterval(autoSwap);
-    });
+  // primeiro item começa em destaque antes de rolar
+  items[0].classList.add("active");
 });
