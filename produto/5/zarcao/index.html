@@ -83,6 +83,7 @@
           <button data-target="c1">Especificações Técnicas</button>
           <button data-target="c3">Boletim Técnico</button>
           <button data-target="c4">FDS</button>
+            <button data-target="c5">Calculadora de Tinta</button>
         </div>
 
       
@@ -261,7 +262,316 @@ Resina alquídica, pigmentos orgânicos e inorgânicos, secagens, aditivos, solv
   </iframe>
 </div>
 
+<div id="c5" class="conteudo">
 
+  <div class="calc-container">
+
+    <h3 class="calc-title">Calculadora de Tinta Veloz</h3>
+
+    <p class="calc-subtitle">
+      Com esta ferramenta, você calcula a quantidade exata de tinta necessária para a sua pintura considerando as dimensões do ambiente.
+    </p>
+
+    <!-- DADOS PRINCIPAIS -->
+    <div class="calc-grid">
+
+      <div class="calc-group">
+        <label for="calcLargura">
+          Largura linear (m)
+        </label>
+
+        <input
+          type="number"
+          id="calcLargura"
+          min="0"
+          step="0.01"
+          placeholder="Ex.: 12"
+        >
+      </div>
+
+      <div class="calc-group">
+        <label for="calcAltura">
+          Altura (m)
+        </label>
+
+        <input
+          type="number"
+          id="calcAltura"
+          min="0"
+          step="0.01"
+          placeholder="Ex.: 2,80"
+        >
+      </div>
+
+      <div class="calc-group">
+        <label for="calcAcabamento">
+          Acabamento
+        </label>
+
+        <select id="calcAcabamento">
+          <option value="Brilho" selected>Brilho</option>
+          <option value="Fosco">Fosco</option>
+        </select>
+      </div>
+
+    </div>
+
+    <!-- BOTÃO -->
+    <button
+      type="button"
+      id="btnCalcular"
+      class="btn-calcular"
+    >
+      Calcular quantidade
+    </button>
+
+    <!-- RESULTADO -->
+    <div
+      id="calcResultado"
+      class="calc-resultado"
+      style="display:none;"
+    ></div>
+
+  </div>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+  // ============================================================
+  // CONFIGURAÇÃO
+  // ============================================================
+
+  const numeroDemaos = 2;
+
+  // ============================================================
+  // EMBALAGENS E RENDIMENTOS (2 DEMÃOS)
+  // ============================================================
+
+  const embalagensTinta = [
+    { volume: 18.0, rendimento: 85.0, nome: 'Lata de 18 Litros' },
+    { volume: 3.6,  rendimento: 17.0, nome: 'Lata de 3,6 Litros' },
+    { volume: 3.0,  rendimento: 14.0, nome: 'Lata de 3 Litros' },
+    { volume: 0.9,  rendimento: 5.0,  nome: 'Lata de 900 ml' },
+    { volume: 0.75, rendimento: 4.0,  nome: 'Lata de 750 ml' }
+  ];
+
+  // ============================================================
+  // TROCA DE ABAS
+  // ============================================================
+
+  const botoesOpcoes = document.querySelectorAll('.opcoes button');
+  const conteudos = document.querySelectorAll('.conteudo');
+
+  botoesOpcoes.forEach(botao => {
+    botao.addEventListener('click', () => {
+      const targetId = botao.getAttribute('data-target');
+
+      botoesOpcoes.forEach(b => b.classList.remove('ativo'));
+      conteudos.forEach(c => c.classList.remove('ativo'));
+
+      botao.classList.add('ativo');
+      const targetConteudo = document.getElementById(targetId);
+
+      if (targetConteudo) {
+        targetConteudo.classList.add('ativo');
+      }
+    });
+  });
+
+  // ============================================================
+  // CALCULAR COMBINAÇÃO IDEAL DE EMBALAGENS
+  // ============================================================
+
+  function calcularEmbalagens(area) {
+    const emb18 = embalagensTinta.find(e => e.volume === 18.0);
+    const emb36 = embalagensTinta.find(e => e.volume === 3.6);
+    const emb30 = embalagensTinta.find(e => e.volume === 3.0);
+    const emb09 = embalagensTinta.find(e => e.volume === 0.9);
+    const emb075 = embalagensTinta.find(e => e.volume === 0.75);
+
+    let melhorOpcao = null;
+
+    const max18 = Math.ceil(area / emb18.rendimento) + 1;
+
+    for (let q18 = 0; q18 <= max18; q18++) {
+      const area18 = q18 * emb18.rendimento;
+      const rest1 = Math.max(0, area - area18);
+      const max36 = Math.ceil(rest1 / emb36.rendimento) + 1;
+
+      for (let q36 = 0; q36 <= max36; q36++) {
+        const area36 = q36 * emb36.rendimento;
+        const rest2 = Math.max(0, rest1 - area36);
+        const max30 = Math.ceil(rest2 / emb30.rendimento) + 1;
+
+        for (let q30 = 0; q30 <= max30; q30++) {
+          const area30 = q30 * emb30.rendimento;
+          const rest3 = Math.max(0, rest2 - area30);
+          const max09 = Math.ceil(rest3 / emb09.rendimento) + 1;
+
+          for (let q09 = 0; q09 <= max09; q09++) {
+            const area09 = q09 * emb09.rendimento;
+            const rest4 = Math.max(0, rest3 - area09);
+
+            const q075 = rest4 > 0 ? Math.ceil(rest4 / emb075.rendimento) : 0;
+            const areaCoberta = area18 + area36 + area30 + area09 + (q075 * emb075.rendimento);
+
+            if (areaCoberta < area) continue;
+
+            const volumeTotal = (q18 * emb18.volume) + (q36 * emb36.volume) + (q30 * emb30.volume) + (q09 * emb09.volume) + (q075 * emb075.volume);
+            const qtdTotal = q18 + q36 + q30 + q09 + q075;
+
+            const opcao = { q18, q36, q30, q09, q075, volumeTotal, qtdTotal, areaCoberta };
+
+            if (!melhorOpcao) {
+              melhorOpcao = opcao;
+              continue;
+            }
+
+            if (opcao.volumeTotal < melhorOpcao.volumeTotal) {
+              melhorOpcao = opcao;
+            } else if (opcao.volumeTotal === melhorOpcao.volumeTotal) {
+              if (opcao.qtdTotal < melhorOpcao.qtdTotal) {
+                melhorOpcao = opcao;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    return melhorOpcao;
+  }
+
+  // ============================================================
+  // BOTÃO CALCULAR
+  // ============================================================
+
+  const btnCalcular = document.getElementById('btnCalcular');
+  if (!btnCalcular) return;
+
+  btnCalcular.addEventListener('click', () => {
+    const larguraLinear = parseFloat(document.getElementById('calcLargura').value) || 0;
+    const altura = parseFloat(document.getElementById('calcAltura').value) || 0;
+    const acabamento = document.getElementById('calcAcabamento').value;
+
+    if (larguraLinear <= 0 || altura <= 0) {
+      alert('Por favor, informe a largura linear total e a altura.');
+      return;
+    }
+
+    // ÁREA TOTAL
+    const areaUtil = larguraLinear * altura;
+
+    // TINTA
+    const resultadoTinta = calcularEmbalagens(areaUtil);
+
+    if (!resultadoTinta) {
+      alert('Não foi possível calcular a quantidade de tinta.');
+      return;
+    }
+
+    const volTinta = resultadoTinta.volumeTotal;
+
+    // TINTA - HTML
+    let tintaHTML = '';
+
+    if (resultadoTinta.q18 > 0) {
+      const texto = resultadoTinta.q18 === 1 ? '1 Lata de 18 Litros' : `${resultadoTinta.q18} Latas de 18 Litros`;
+      tintaHTML += `
+        <div class="calc-tinta-item">
+          <strong>${texto}</strong>
+          <small>Tinta Veloz (${acabamento})</small>
+        </div>
+      `;
+    }
+
+    if (resultadoTinta.q36 > 0) {
+      const texto = resultadoTinta.q36 === 1 ? '1 Lata de 3,6 Litros' : `${resultadoTinta.q36} Latas de 3,6 Litros`;
+      tintaHTML += `
+        <div class="calc-tinta-item">
+          <strong>${texto}</strong>
+          <small>Tinta Veloz (${acabamento})</small>
+        </div>
+      `;
+    }
+
+    if (resultadoTinta.q30 > 0) {
+      const texto = resultadoTinta.q30 === 1 ? '1 Lata de 3 Litros' : `${resultadoTinta.q30} Latas de 3 Litros`;
+      tintaHTML += `
+        <div class="calc-tinta-item">
+          <strong>${texto}</strong>
+          <small>Tinta Veloz (${acabamento})</small>
+        </div>
+      `;
+    }
+
+    if (resultadoTinta.q09 > 0) {
+      const texto = resultadoTinta.q09 === 1 ? '1 Lata de 900 ml' : `${resultadoTinta.q09} Latas de 900 ml`;
+      tintaHTML += `
+        <div class="calc-tinta-item">
+          <strong>${texto}</strong>
+          <small>Tinta Veloz (${acabamento})</small>
+        </div>
+      `;
+    }
+
+    if (resultadoTinta.q075 > 0) {
+      const texto = resultadoTinta.q075 === 1 ? '1 Lata de 750 ml' : `${resultadoTinta.q075} Latas de 750 ml`;
+      tintaHTML += `
+        <div class="calc-tinta-item">
+          <strong>${texto}</strong>
+          <small>Tinta Veloz (${acabamento})</small>
+        </div>
+      `;
+    }
+
+    // EXIBIR RESULTADO
+    const containerResultado = document.getElementById('calcResultado');
+    containerResultado.style.display = 'block';
+
+    containerResultado.innerHTML = `
+      <!-- RESUMO -->
+      <div class="calc-res-grid">
+        <div class="calc-card-stat">
+          <small>Área para pintar</small>
+          <strong>${areaUtil.toFixed(1)} m²</strong>
+        </div>
+        <div class="calc-card-stat">
+          <small>Demãos</small>
+          <strong>${numeroDemaos}</strong>
+        </div>
+        <div class="calc-card-stat">
+          <small>Acabamento</small>
+          <strong>${acabamento}</strong>
+        </div>
+      </div>
+
+      <!-- TINTA - DESTAQUE PRINCIPAL -->
+      <section class="calc-tinta-destaque">
+        <div class="calc-destaque-topo">
+          <div>
+            <span class="calc-destaque-label">PRODUTO PRINCIPAL</span>
+            <h4>Tinta Veloz — ${acabamento}</h4>
+            <p>Quantidade recomendada para a área calculada (${volTinta.toFixed(2).replace('.', ',')} Litros no total).</p>
+          </div>
+        </div>
+        <div class="calc-tinta-lista">
+          ${tintaHTML}
+        </div>
+      </section>
+    `;
+
+    setTimeout(() => {
+      containerResultado.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest'
+      });
+    }, 100);
+  });
+});
+</script>
 
       </div>
     </div>

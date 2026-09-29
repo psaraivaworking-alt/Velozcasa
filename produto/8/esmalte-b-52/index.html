@@ -85,6 +85,7 @@
           <button data-target="c1">Especificações Técnicas</button>
           <button data-target="c3">Boletim Técnino</button>
           <button data-target="c4">FDS</button>
+            <button data-target="c5">Calculadora de Tinta</button>
         </div>
 
       
@@ -317,8 +318,369 @@ Resina alquídica à base de óleo vegetal semi-secativo, pigmentos orgânicos e
     allow="autoplay">
   </iframe>
 </div>
+<div id="c5" class="conteudo">
 
+  <div class="calc-container">
 
+    <h3 class="calc-title">Calculadora Esmalte B-52</h3>
+
+    <p class="calc-subtitle">
+      Com esta ferramenta, você calcula a quantidade exata de Esmalte B-52 e a recomendação de Diluente A-rraz Veloz para a sua pintura.
+    </p>
+
+    <!-- DADOS PRINCIPAIS -->
+    <div class="calc-grid">
+
+      <div class="calc-group">
+        <label for="calcLargura">
+          Largura linear (m)
+        </label>
+
+        <input
+          type="number"
+          id="calcLargura"
+          min="0"
+          step="0.01"
+          placeholder="Ex.: 12"
+        >
+      </div>
+
+      <div class="calc-group">
+        <label for="calcAltura">
+          Altura (m)
+        </label>
+
+        <input
+          type="number"
+          id="calcAltura"
+          min="0"
+          step="0.01"
+          placeholder="Ex.: 2,80"
+        >
+      </div>
+
+      <div class="calc-group">
+        <label for="calcAcabamento">
+          Acabamento
+        </label>
+
+        <select id="calcAcabamento">
+          <option value="Fosco">Fosco</option>
+          <option value="Brilhante" selected>Brilhante</option>
+          <option value="Acetinado">Acetinado</option>
+        </select>
+      </div>
+
+    </div>
+
+    <!-- BOTÃO -->
+    <button
+      type="button"
+      id="btnCalcular"
+      class="btn-calcular"
+    >
+      Calcular quantidade
+    </button>
+
+    <!-- RESULTADO -->
+    <div
+      id="calcResultado"
+      class="calc-resultado"
+      style="display:none;"
+    ></div>
+
+  </div>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+  // ============================================================
+  // CONFIGURAÇÃO
+  // ============================================================
+
+  const numeroDemaos = 3;
+
+  // ============================================================
+  // EMBALAGENS ESMALTE B-52
+  // ============================================================
+
+  const embalagensEsmalte = [
+    { volume: 3.6, rendimento: 17, nome: 'Lata de 3,6 Litros' },
+    { volume: 3.0, rendimento: 15, nome: 'Lata de 3 Litros' },
+    { volume: 0.9, rendimento: 4.25, nome: 'Lata de 900 ml' }
+  ];
+
+  // ============================================================
+  // EMBALAGENS DILUENTE A-RRAZ VELOZ
+  // ============================================================
+
+  const embalagensDiluente = [
+    { volume: 5.0, nome: 'Lata de 5 Litros' },
+    { volume: 0.9, nome: 'Lata de 900 ml' }
+  ];
+
+  // ============================================================
+  // TROCA DE ABAS
+  // ============================================================
+
+  const botoesOpcoes = document.querySelectorAll('.opcoes button');
+  const conteudos = document.querySelectorAll('.conteudo');
+
+  botoesOpcoes.forEach(botao => {
+    botao.addEventListener('click', () => {
+      const targetId = botao.getAttribute('data-target');
+
+      botoesOpcoes.forEach(b => b.classList.remove('ativo'));
+      conteudos.forEach(c => c.classList.remove('ativo'));
+
+      botao.classList.add('ativo');
+      const targetConteudo = document.getElementById(targetId);
+
+      if (targetConteudo) {
+        targetConteudo.classList.add('ativo');
+      }
+    });
+  });
+
+  // ============================================================
+  // CALCULAR EMBALAGENS DE TINTA (3,6L / 3L / 900ML)
+  // ============================================================
+
+  function calcularEmbalagensEsmalte(area) {
+    const emb36 = embalagensEsmalte.find(e => e.volume === 3.6);
+    const emb30 = embalagensEsmalte.find(e => e.volume === 3.0);
+    const emb09 = embalagensEsmalte.find(e => e.volume === 0.9);
+
+    let melhorOpcao = null;
+    const max36 = Math.ceil(area / emb36.rendimento) + 1;
+
+    for (let q36 = 0; q36 <= max36; q36++) {
+      const area36 = q36 * emb36.rendimento;
+      const rest1 = Math.max(0, area - area36);
+      const max30 = Math.ceil(rest1 / emb30.rendimento) + 1;
+
+      for (let q30 = 0; q30 <= max30; q30++) {
+        const area30 = q30 * emb30.rendimento;
+        const rest2 = Math.max(0, rest1 - area30);
+
+        const q09 = rest2 > 0 ? Math.ceil(rest2 / emb09.rendimento) : 0;
+        const areaCoberta = area36 + area30 + (q09 * emb09.rendimento);
+
+        if (areaCoberta < area) continue;
+
+        const volumeTotal = (q36 * emb36.volume) + (q30 * emb30.volume) + (q09 * emb09.volume);
+        const qtdTotal = q36 + q30 + q09;
+
+        const opcao = { q36, q30, q09, volumeTotal, qtdTotal, areaCoberta };
+
+        if (!melhorOpcao) {
+          melhorOpcao = opcao;
+          continue;
+        }
+
+        if (opcao.volumeTotal < melhorOpcao.volumeTotal) {
+          melhorOpcao = opcao;
+        } else if (opcao.volumeTotal === melhorOpcao.volumeTotal) {
+          if (opcao.qtdTotal < melhorOpcao.qtdTotal) {
+            melhorOpcao = opcao;
+          }
+        }
+      }
+    }
+
+    return melhorOpcao;
+  }
+
+  // ============================================================
+  // CALCULAR DILUENTE (5L / 900ML)
+  // ============================================================
+
+  function calcularEmbalagensDiluente(volumeNecessarioLitros) {
+    if (volumeNecessarioLitros <= 0) return { q5: 0, q09: 0, volumeTotal: 0 };
+
+    const emb5 = embalagensDiluente.find(e => e.volume === 5.0);
+    const emb09 = embalagensDiluente.find(e => e.volume === 0.9);
+
+    let melhorOpcao = null;
+    const max5 = Math.ceil(volumeNecessarioLitros / emb5.volume) + 1;
+
+    for (let q5 = 0; q5 <= max5; q5++) {
+      const vol5 = q5 * emb5.volume;
+      const rest = Math.max(0, volumeNecessarioLitros - vol5);
+      const q09 = rest > 0 ? Math.ceil(rest / emb09.volume) : 0;
+      const volumeFornecido = vol5 + (q09 * emb09.volume);
+
+      if (volumeFornecido < volumeNecessarioLitros) continue;
+
+      const qtdTotal = q5 + q09;
+      const opcao = { q5, q09, volumeTotal: volumeFornecido, qtdTotal };
+
+      if (!melhorOpcao || opcao.volumeTotal < melhorOpcao.volumeTotal ||
+         (opcao.volumeTotal === melhorOpcao.volumeTotal && opcao.qtdTotal < melhorOpcao.qtdTotal)) {
+        melhorOpcao = opcao;
+      }
+    }
+
+    return melhorOpcao;
+  }
+
+  function formatarResultadoDiluente(res) {
+    if (!res) return 'Nenhuma';
+    const partes = [];
+    if (res.q5 > 0) partes.push(`${res.q5} ${res.q5 === 1 ? 'Lata' : 'Latas'} de 5 Litros`);
+    if (res.q09 > 0) partes.push(`${res.q09} ${res.q09 === 1 ? 'Lata' : 'Latas'} de 900 ml`);
+    return partes.length > 0 ? partes.join(' + ') : 'Nenhuma';
+  }
+
+  // ============================================================
+  // BOTÃO CALCULAR
+  // ============================================================
+
+  const btnCalcular = document.getElementById('btnCalcular');
+  if (!btnCalcular) return;
+
+  btnCalcular.addEventListener('click', () => {
+    const larguraLinear = parseFloat(document.getElementById('calcLargura').value) || 0;
+    const altura = parseFloat(document.getElementById('calcAltura').value) || 0;
+    const acabamento = document.getElementById('calcAcabamento').value;
+
+    if (larguraLinear <= 0 || altura <= 0) {
+      alert('Por favor, informe a largura linear total e a altura.');
+      return;
+    }
+
+    // ÁREA TOTAL
+    const areaUtil = larguraLinear * altura;
+
+    // TINTA
+    const resultadoTinta = calcularEmbalagensEsmalte(areaUtil);
+
+    if (!resultadoTinta) {
+      alert('Não foi possível calcular a quantidade de tinta.');
+      return;
+    }
+
+    // DILUIÇÕES
+    const volTinta = resultadoTinta.volumeTotal;
+    const volDiluenteRolo = volTinta * 0.10; // 10%
+    const volDiluentePistola = volTinta * 0.30; // 30%
+
+    const embRolo = calcularEmbalagensDiluente(volDiluenteRolo);
+    const embPistola = calcularEmbalagensDiluente(volDiluentePistola);
+
+    // TINTA - HTML
+    let tintaHTML = '';
+
+    if (resultadoTinta.q36 > 0) {
+      const texto = resultadoTinta.q36 === 1 ? '1 Lata de 3,6 Litros' : `${resultadoTinta.q36} Latas de 3,6 Litros`;
+      tintaHTML += `
+        <div class="calc-tinta-item">
+          <strong>${texto}</strong>
+          <small>Esmalte B-52 (${acabamento})</small>
+        </div>
+      `;
+    }
+
+    if (resultadoTinta.q30 > 0) {
+      const texto = resultadoTinta.q30 === 1 ? '1 Lata de 3 Litros' : `${resultadoTinta.q30} Latas de 3 Litros`;
+      tintaHTML += `
+        <div class="calc-tinta-item">
+          <strong>${texto}</strong>
+          <small>Esmalte B-52 (${acabamento})</small>
+        </div>
+      `;
+    }
+
+    if (resultadoTinta.q09 > 0) {
+      const texto = resultadoTinta.q09 === 1 ? '1 Lata de 900 ml' : `${resultadoTinta.q09} Latas de 900 ml`;
+      tintaHTML += `
+        <div class="calc-tinta-item">
+          <strong>${texto}</strong>
+          <small>Esmalte B-52 (${acabamento})</small>
+        </div>
+      `;
+    }
+
+    // EXIBIR RESULTADO
+    const containerResultado = document.getElementById('calcResultado');
+    containerResultado.style.display = 'block';
+
+    containerResultado.innerHTML = `
+      <!-- RESUMO -->
+      <div class="calc-res-grid">
+        <div class="calc-card-stat">
+          <small>Área para pintar</small>
+          <strong>${areaUtil.toFixed(1)} m²</strong>
+        </div>
+        <div class="calc-card-stat">
+          <small>Demãos</small>
+          <strong>${numeroDemaos}</strong>
+        </div>
+        <div class="calc-card-stat">
+          <small>Acabamento</small>
+          <strong>${acabamento}</strong>
+        </div>
+      </div>
+
+      <!-- TINTA - DESTAQUE PRINCIPAL -->
+      <section class="calc-tinta-destaque">
+        <div class="calc-destaque-topo">
+          <div>
+            <span class="calc-destaque-label">PRODUTO PRINCIPAL</span>
+            <h4>Esmalte B-52 — ${acabamento}</h4>
+            <p>Quantidade recomendada para a área calculada (${volTinta.toFixed(2).replace('.', ',')} Litros no total).</p>
+          </div>
+        </div>
+        <div class="calc-tinta-lista">
+          ${tintaHTML}
+        </div>
+      </section>
+
+      <!-- DILUIÇÃO E DILUENTE A-RRAZ VELOZ -->
+      <div class="calc-outros-produtos">
+        <section class="calc-insumo-box">
+          <div class="calc-insumo-header">
+            <div>
+              <span>DILUIÇÃO RECOMENDADA</span>
+              <h4>Diluente A-rraz Veloz</h4>
+            </div>
+          </div>
+
+          <div class="calc-produto-linha">
+            <div>
+              <strong>Aplicação com Pincel ou Rolo de Espuma (Até 10%)</strong>
+              <small>Diluir com Diluente A-rraz Veloz em até 10%. Necessário: ~${volDiluenteRolo.toFixed(2).replace('.', ',')} L</small>
+            </div>
+            <b>${formatarResultadoDiluente(embRolo)}</b>
+          </div>
+
+          <div class="calc-produto-linha">
+            <div>
+              <strong>Aplicação com Pistola (Até 30%)</strong>
+              <small>Coar o produto, diluir em até 30% com Diluente A-rraz Veloz. Necessário: ~${volDiluentePistola.toFixed(2).replace('.', ',')} L</small>
+            </div>
+            <b>${formatarResultadoDiluente(embPistola)}</b>
+          </div>
+
+          <div class="calc-observacao">
+            <strong>Instrução para Pistola:</strong>
+            Aplicar com pressão entre 2,2 e 2,8 kgf/cm² (30 a 35 lbs/pol²) em camadas finas e bem distribuídas.
+          </div>
+        </section>
+      </div>
+    `;
+
+    setTimeout(() => {
+      containerResultado.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest'
+      });
+    }, 100);
+  });
+});
+</script>
 
       </div>
     </div>
