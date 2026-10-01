@@ -83,6 +83,7 @@
             <button class="ativo" data-target="c1">Especificações Técnicas</button>
             <button data-target="c3">Boletim Técnico</button>
             <button data-target="c4">FDS</button>
+            <button data-target="c5">Calculadora de Tinta</button>
           </div>
 
           <!-- ESPECIFICAÇÕES TÉCNICAS (CONTEÚDO C1) -->
@@ -191,6 +192,327 @@
     allow="autoplay">
   </iframe>
 </div> 
+
+<div id="c5" class="conteudo">
+  <div class="calc-container">
+    <h3 class="calc-title">Calculadora Massa para Madeira</h3>
+
+    <p class="calc-subtitle">
+      Com esta ferramenta, você consegue calcular a quantidade de Massa para Madeira necessária considerando a metragem linear e a altura da superfície de aplicação.
+    </p>
+
+    <!-- DADOS PRINCIPAIS -->
+    <div class="calc-grid">
+      <div class="calc-group">
+        <label for="calcLargura">Largura linear (m)</label>
+        <input
+          type="number"
+          id="calcLargura"
+          min="0"
+          step="0.01"
+          placeholder="Ex.: 12"
+        >
+      </div>
+
+      <div class="calc-group">
+        <label for="calcAltura">Altura (m)</label>
+        <input
+          type="number"
+          id="calcAltura"
+          min="0"
+          step="0.01"
+          placeholder="Ex.: 2,80"
+        >
+      </div>
+
+      <div class="calc-group">
+        <label for="calcAcabamento">Acabamento</label>
+        <input
+          type="text"
+          id="calcAcabamento"
+          value="Branco"
+          readonly
+          style="background-color: #f5f5f5; cursor: not-allowed;"
+        >
+      </div>
+    </div>
+
+    <!-- DESCONTOS -->
+    <div class="calc-toggle-descontos">
+      <label class="checkbox-container">
+        <input type="checkbox" id="chkDescontos">
+        <span>Descontar portas e janelas</span>
+      </label>
+    </div>
+
+    <!-- ÁREA DE DESCONTOS -->
+    <div id="boxDescontos" class="calc-descontos-box" style="display:none;">
+      <!-- PORTAS -->
+      <div class="desconto-section">
+        <div class="desconto-section-header">
+          <div>
+            <h4>Portas</h4>
+            <span>Adicione as áreas de portas que não receberão aplicação.</span>
+          </div>
+          <button type="button" id="btnAdicionarPorta" class="btn-adicionar-item">+ Adicionar porta</button>
+        </div>
+        <div id="listaPortas" class="desconto-lista"></div>
+      </div>
+
+      <!-- JANELAS -->
+      <div class="desconto-section">
+        <div class="desconto-section-header">
+          <div>
+            <h4>Janelas</h4>
+            <span>Adicione as áreas de janelas que não receberão aplicação.</span>
+          </div>
+          <button type="button" id="btnAdicionarJanela" class="btn-adicionar-item">+ Adicionar janela</button>
+        </div>
+        <div id="listaJanelas" class="desconto-lista"></div>
+      </div>
+    </div>
+
+    <!-- BOTÃO -->
+    <button type="button" id="btnCalcular" class="btn-calcular">Calcular quantidade</button>
+
+    <!-- RESULTADO -->
+    <div id="calcResultado" class="calc-resultado" style="display:none;"></div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+  const numeroDemaos = 3;
+
+  // Produto exclusivo: Massa para Madeira (Branco)
+  const produtoMassaMadeira = {
+    nome: 'Massa para Madeira Branco',
+    embalagens: [
+      { volume: 3.6, rendimento: 14, nome: 'Balde de 3,6 Litros' },
+      { volume: 1.0, rendimento: 3.5, nome: 'Balde de 1 Litro' }
+    ]
+  };
+
+  // ============================================================
+  // ELEMENTOS E EVENTOS DE DESCONTO
+  // ============================================================
+  const chkDescontos = document.getElementById('chkDescontos');
+  const boxDescontos = document.getElementById('boxDescontos');
+  const listaPortas = document.getElementById('listaPortas');
+  const listaJanelas = document.getElementById('listaJanelas');
+  const btnAdicionarPorta = document.getElementById('btnAdicionarPorta');
+  const btnAdicionarJanela = document.getElementById('btnAdicionarJanela');
+
+  function criarItem(tipo) {
+    const nome = tipo === 'porta' ? 'Porta' : 'Janela';
+    const item = document.createElement('div');
+    item.className = `desconto-item desconto-${tipo}`;
+
+    item.innerHTML = `
+      <div class="desconto-item-header">
+        <strong>${nome}</strong>
+        <button type="button" class="btn-remover-item" title="Remover">×</button>
+      </div>
+      <div class="desconto-item-grid">
+        <div class="calc-group">
+          <label>Largura (m)</label>
+          <input type="number" class="desconto-largura" min="0" step="0.01" placeholder="Ex.: 0,80">
+        </div>
+        <div class="calc-group">
+          <label>Altura (m)</label>
+          <input type="number" class="desconto-altura" min="0" step="0.01" placeholder="Ex.: 2,10">
+        </div>
+      </div>
+    `;
+
+    item.querySelector('.btn-remover-item').addEventListener('click', () => item.remove());
+    return item;
+  }
+
+  if (btnAdicionarPorta) {
+    btnAdicionarPorta.addEventListener('click', () => {
+      listaPortas.appendChild(criarItem('porta'));
+    });
+  }
+
+  if (btnAdicionarJanela) {
+    btnAdicionarJanela.addEventListener('click', () => {
+      listaJanelas.appendChild(criarItem('janela'));
+    });
+  }
+
+  if (chkDescontos && boxDescontos) {
+    chkDescontos.addEventListener('change', () => {
+      boxDescontos.style.display = chkDescontos.checked ? 'block' : 'none';
+
+      if (chkDescontos.checked && listaPortas.children.length === 0) {
+        listaPortas.appendChild(criarItem('porta'));
+      }
+      if (chkDescontos.checked && listaJanelas.children.length === 0) {
+        listaJanelas.appendChild(criarItem('janela'));
+      }
+    });
+  }
+
+  // ============================================================
+  // CÁLCULO LOGÍSTICO DE EMBALAGENS (3,6L e 1L)
+  // ============================================================
+  function calcularEmbalagens(area, embalagens) {
+    const embalagem36 = embalagens.find(e => e.volume === 3.6);
+    const embalagem1 = embalagens.find(e => e.volume === 1.0);
+
+    if (!embalagem36 || !embalagem1) return null;
+
+    let melhorOpcao = null;
+    const max36 = Math.ceil(area / embalagem36.rendimento) + 1;
+
+    for (let q36 = 0; q36 <= max36; q36++) {
+      const areaCom36 = q36 * embalagem36.rendimento;
+      const areaRestante = Math.max(0, area - areaCom36);
+
+      const q1 = areaRestante > 0 
+        ? Math.ceil(areaRestante / embalagem1.rendimento) 
+        : 0;
+
+      const areaCoberta = areaCom36 + (q1 * embalagem1.rendimento);
+      const volumeTotal = (q36 * embalagem36.volume) + (q1 * embalagem1.volume);
+      const quantidadeEmbalagens = q36 + q1;
+
+      if (areaCoberta < area) continue;
+
+      const opcao = { q36, q1, volumeTotal, quantidadeEmbalagens, areaCoberta };
+
+      if (!melhorOpcao) {
+        melhorOpcao = opcao;
+        continue;
+      }
+
+      if (opcao.volumeTotal < melhorOpcao.volumeTotal) {
+        melhorOpcao = opcao;
+      } else if (opcao.volumeTotal === melhorOpcao.volumeTotal) {
+        if (opcao.quantidadeEmbalagens < melhorOpcao.quantidadeEmbalagens) {
+          melhorOpcao = opcao;
+        } else if (opcao.quantidadeEmbalagens === melhorOpcao.quantidadeEmbalagens && opcao.q36 > melhorOpcao.q36) {
+          melhorOpcao = opcao;
+        }
+      }
+    }
+
+    return melhorOpcao;
+  }
+
+  function calcularAreaDescontos(lista) {
+    let total = 0;
+    lista.forEach(item => {
+      const largura = parseFloat(item.querySelector('.desconto-largura').value) || 0;
+      const altura = parseFloat(item.querySelector('.desconto-altura').value) || 0;
+      total += largura * altura;
+    });
+    return total;
+  }
+
+  // ============================================================
+  // BOTÃO CALCULAR
+  // ============================================================
+  const btnCalcular = document.getElementById('btnCalcular');
+  if (!btnCalcular) return;
+
+  btnCalcular.addEventListener('click', () => {
+    const larguraLinear = parseFloat(document.getElementById('calcLargura').value) || 0;
+    const altura = parseFloat(document.getElementById('calcAltura').value) || 0;
+
+    if (larguraLinear <= 0 || altura <= 0) {
+      alert('Por favor, informe a largura linear total e a altura.');
+      return;
+    }
+
+    const areaBruta = larguraLinear * altura;
+    let areaPortas = 0;
+    let areaJanelas = 0;
+
+    if (chkDescontos && chkDescontos.checked) {
+      areaPortas = calcularAreaDescontos(Array.from(document.querySelectorAll('.desconto-porta')));
+      areaJanelas = calcularAreaDescontos(Array.from(document.querySelectorAll('.desconto-janela')));
+    }
+
+    const areaDescontos = areaPortas + areaJanelas;
+    const areaUtil = Math.max(0, areaBruta - areaDescontos);
+
+    if (areaUtil <= 0) {
+      alert('A área para aplicação ficou igual ou menor que zero. Verifique as medidas informadas.');
+      return;
+    }
+
+    const resultadoMassa = calcularEmbalagens(areaUtil, produtoMassaMadeira.embalagens);
+    if (!resultadoMassa) {
+      alert('Não foi possível calcular a quantidade de massa.');
+      return;
+    }
+
+    let massaHTML = '';
+
+    if (resultadoMassa.q36 > 0) {
+      const texto = resultadoMassa.q36 === 1 ? '1 Balde de 3,6 Litros' : `${resultadoMassa.q36} Baldes de 3,6 Litros`;
+      massaHTML += `
+        <div class="calc-tinta-item">
+          <strong>${texto}</strong>
+          <small>${produtoMassaMadeira.nome}</small>
+        </div>
+      `;
+    }
+
+    if (resultadoMassa.q1 > 0) {
+      const texto = resultadoMassa.q1 === 1 ? '1 Balde de 1 Litro' : `${resultadoMassa.q1} Baldes de 1 Litro`;
+      massaHTML += `
+        <div class="calc-tinta-item">
+          <strong>${texto}</strong>
+          <small>Complemento da quantidade necessária</small>
+        </div>
+      `;
+    }
+
+    const containerResultado = document.getElementById('calcResultado');
+    containerResultado.style.display = 'block';
+
+    containerResultado.innerHTML = `
+      <!-- RESUMO -->
+      <div class="calc-res-grid">
+        <div class="calc-card-stat">
+          <small>Área para aplicar</small>
+          <strong>${areaUtil.toFixed(1)} m²</strong>
+        </div>
+        <div class="calc-card-stat">
+          <small>Demãos</small>
+          <strong>${numeroDemaos}</strong>
+        </div>
+        <div class="calc-card-stat">
+          <small>Acabamento</small>
+          <strong>${produtoMassaMadeira.nome}</strong>
+        </div>
+      </div>
+
+      <!-- MASSA PRINCIPAL -->
+      <section class="calc-tinta-destaque">
+        <div class="calc-destaque-topo">
+          <div>
+            <span class="calc-destaque-label">PRODUTO PRINCIPAL</span>
+            <h4>${produtoMassaMadeira.nome}</h4>
+            <p>Quantidade recomendada para a área calculada (3 demãos acabadas).</p>
+          </div>
+        </div>
+        <div class="calc-tinta-lista">
+          ${massaHTML}
+        </div>
+      </section>
+    `;
+
+    setTimeout(() => {
+      containerResultado.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 100);
+  });
+});
+</script>
         </div>
       </div>
     </section>

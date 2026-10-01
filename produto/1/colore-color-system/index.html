@@ -88,6 +88,7 @@
   <button data-target="c4">FDS</button>
   <!-- NOVO BOTÃO DA CALCULADORA -->
   <button data-target="c5">Calculadora de Tinta</button>
+    <button data-target="c6">Guia de Pintura</button>
 </div>
           <div id="c1" class="conteudo">
             <div class="ES">
@@ -243,8 +244,6 @@
             </a>
             <iframe src="https://drive.google.com/file/d/1n9NvaRC4u1xir7_KBYGMNGBfc32aiiA0/preview" allow="autoplay"></iframe>
           </div>
- 
-
 
 <div id="c5" class="conteudo">
 
@@ -1854,7 +1853,583 @@ if (resultadoTinta.latas > 0) {
 
 </script>
 
+<!-- ============================================================
+     C6 - GUIA DE PINTURA
+     Cole este bloco dentro de .texto-produto-2, junto dos outros
+     (c1, c2, c3...). O botão da aba continua o mesmo:
+     <button data-target="c6">Guia de Pintura</button>
+============================================================ -->
+<div id="c6" class="conteudo">
+  <div class="gp">
 
+    <div class="gp-cabecalho">
+      <h3>Recomendações antes da pintura</h3>
+      <p>Escolha uma etapa para ver como preparar a superfície.</p>
+    </div>
+
+    <div class="gp-corpo">
+
+      <!-- LISTA DE TÓPICOS (esquerda) -->
+      <div class="gp-nav" role="tablist" aria-orientation="vertical" aria-label="Etapas do guia de pintura">
+        <span class="gp-indicador" aria-hidden="true"></span>
+
+        <button type="button" class="gp-item ativo" role="tab" data-gp="gp1" aria-selected="true">Conforme norma ABNT NBR 13245</button>
+        <button type="button" class="gp-item" role="tab" data-gp="gp2" aria-selected="false" tabindex="-1">Recomendações</button>
+        <button type="button" class="gp-item" role="tab" data-gp="gp3" aria-selected="false" tabindex="-1">Antes de aplicar</button>
+
+        <span class="gp-grupo">Preparação da superfície</span>
+
+        <button type="button" class="gp-item" role="tab" data-gp="gp4" aria-selected="false" tabindex="-1">Reboco e concreto novo</button>
+        <button type="button" class="gp-item" role="tab" data-gp="gp5" aria-selected="false" tabindex="-1">Reboco fraco, gesso e fibrocimento</button>
+        <button type="button" class="gp-item" role="tab" data-gp="gp6" aria-selected="false" tabindex="-1">Imperfeições rasas e profundas</button>
+
+        <span class="gp-grupo">Segurança</span>
+
+        <button type="button" class="gp-item" role="tab" data-gp="gp7" aria-selected="false" tabindex="-1">Informações de segurança</button>
+      </div>
+
+      <!-- TEXTOS (direita) -->
+      <div class="gp-paineis">
+
+        <article id="gp1" class="gp-painel ativo" role="tabpanel">
+          <h4>Conforme norma ABNT NBR 13245</h4>
+          <p>A superfície deve estar firme, coesa, limpa e seca antes de qualquer aplicação.</p>
+          <div class="gp-destaque">
+            Desenvolvido conforme as normas NBR 15079 e NBR 11702 vigentes: Tipo 4.5.3 Premium Fosco, Tipo 4.5.7 Premium Acetinado e Tipo 4.5.10 Premium Semibrilho.
+          </div>
+        </article>
+
+        <article id="gp2" class="gp-painel" role="tabpanel">
+          <h4>Recomendações</h4>
+          <div class="gp-cartoes">
+            <div class="gp-cartao">
+              <strong>Ferramentas</strong>
+              <span>Rolo de lã de pelo baixo, pistola, pincel ou trincha.</span>
+            </div>
+            <div class="gp-cartao">
+              <strong>Diluição</strong>
+              <span>Pincel, rolo ou trincha: até 30% de água potável. Pistola: até 50%, com pressão de 2,2 a 2,8 kgf/cm².</span>
+            </div>
+            <div class="gp-cartao">
+              <strong>Demãos</strong>
+              <span>De 2 a 3 demãos, com intervalo de 4 horas.</span>
+            </div>
+          </div>
+          <div class="gp-destaque">
+            As Tintas Veloz têm zero odor após 3 horas de aplicação. A percepção pode variar conforme a sensibilidade.
+          </div>
+        </article>
+
+        <article id="gp3" class="gp-painel" role="tabpanel">
+          <h4>Antes de aplicar</h4>
+          <h5>Superfície em bom estado (com ou sem pintura)</h5>
+          <p>Lixar e eliminar o pó com pano úmido. Após a secagem, iniciar a aplicação.</p>
+          <h5>Manchas de gordura, graxas e mofo</h5>
+          <p>Lavar com água e detergente. Em casos profundos, usar água sanitária, enxaguar e aguardar a secagem.</p>
+        </article>
+
+        <article id="gp4" class="gp-painel" role="tabpanel">
+          <h4>Reboco e concreto novo</h4>
+          <ol class="gp-passos">
+            <li>Aguardar a secagem e cura de no mínimo 28 dias (ambientes internos).</li>
+            <li>Aplicar uma demão de Selador Acrílico Veloz.</li>
+            <li>Lixar (grana 180/240) e eliminar o pó.</li>
+          </ol>
+        </article>
+
+        <article id="gp5" class="gp-painel" role="tabpanel">
+          <h4>Reboco fraco, gesso e fibrocimento</h4>
+          <p>Aplicar uma demão de Fundo Preparador de Paredes Veloz, conforme a embalagem.</p>
+        </article>
+
+        <article id="gp6" class="gp-painel" role="tabpanel">
+          <h4>Imperfeições rasas e profundas</h4>
+          <ol class="gp-passos">
+            <li>Corrigir com reboco e aguardar a cura (mínimo de 28 dias).</li>
+            <li>Corrigir com Massa Acrílica Veloz (interno e externo) ou Massa Corrida Veloz (interno).</li>
+          </ol>
+        </article>
+
+        <!-- TEXTO PROVISÓRIO: troque pelo texto oficial de segurança -->
+        <article id="gp7" class="gp-painel" role="tabpanel">
+          <h4>Informações de segurança</h4>
+          <p>Antes de manusear ou aplicar o produto, consulte a Ficha com Dados de Segurança (FDS).</p>
+          <button type="button" class="gp-botao" data-ir="c4">Abrir a FDS</button>
+        </article>
+
+        <style>
+          /* ============================================================
+   C6 - GUIA DE PINTURA
+   Cole no final do produt.css
+   Usa as variáveis que já existem no site (--roxo-veloz etc.)
+============================================================ */
+
+#c6 {
+  --gp-seta: 18px;
+  --gp-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+#c6 .gp {
+  background: #fff;
+  border: 1px solid #e6dcee;
+  border-radius: 14px;
+  padding: 24px;
+  margin-top: 15px;
+}
+
+#c6 .gp-cabecalho {
+  margin-bottom: 20px;
+}
+
+#c6 .gp-cabecalho h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--roxo-veloz);
+}
+
+#c6 .gp-cabecalho p {
+  font-size: 13px;
+  color: #666;
+  margin-top: 4px;
+}
+
+
+/* ---------- LAYOUT: lista à esquerda, texto à direita ---------- */
+
+#c6 .gp-corpo {
+  display: grid;
+  grid-template-columns: minmax(230px, 36%) 1fr;
+  align-items: stretch;
+}
+
+
+/* ---------- LISTA DE TÓPICOS ---------- */
+
+#c6 .gp-nav {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 2;
+}
+
+/* Bloco roxo com ponta de seta: desliza até o tópico escolhido */
+#c6 .gp-indicador {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: calc(100% + var(--gp-seta));
+  height: 0;
+  background: linear-gradient(100deg, var(--roxo-veloz), var(--roxo-claro));
+  border-radius: 8px 0 0 8px;
+  clip-path: polygon(
+    0 0,
+    calc(100% - var(--gp-seta)) 0,
+    100% 50%,
+    calc(100% - var(--gp-seta)) 100%,
+    0 100%
+  );
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+  will-change: transform, height;
+  transition:
+    transform 0.6s var(--gp-ease),
+    height 0.6s var(--gp-ease),
+    opacity 0.3s ease;
+}
+
+#c6 .gp-indicador.visivel {
+  opacity: 1;
+}
+
+#c6 .gp-grupo {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--roxo-claro);
+  padding: 14px 0 2px 4px;
+}
+
+#c6 .gp-item {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: #fff;
+  border: 1px solid #ebe2f0;
+  border-radius: 8px 0 0 8px;
+  padding: 13px 30px 13px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--roxo-medio);
+  cursor: pointer;
+  transition:
+    color 0.35s ease,
+    background-color 0.35s ease,
+    border-color 0.35s ease,
+    padding-left 0.45s var(--gp-ease);
+}
+
+#c6 .gp-item:hover {
+  background: #f4ecf7;
+  padding-left: 22px;
+}
+
+/* Tópico selecionado: fundo fica por conta do bloco roxo deslizante */
+#c6 .gp-item.ativo,
+#c6 .gp-item.ativo:hover {
+  background: transparent;
+  border-color: transparent;
+  color: #fff;
+  padding-left: 22px;
+}
+
+#c6 .gp-item:focus-visible {
+  outline: 2px solid var(--roxo-claro);
+  outline-offset: 2px;
+}
+
+
+/* ---------- PAINEL DE TEXTO ---------- */
+
+#c6 .gp-paineis {
+  display: grid;
+  background: #f4ecf7;
+  border: 1px solid #e1d4e8;
+  border-radius: 0 12px 12px 12px;
+  padding: 26px 26px 26px calc(var(--gp-seta) + 22px);
+  scroll-margin-top: 170px;
+}
+
+/* Todos os painéis ocupam o mesmo lugar: a altura nunca "pula" */
+#c6 .gp-painel {
+  grid-area: 1 / 1;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(24px);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease,
+    visibility 0s linear 0.3s;
+}
+
+#c6 .gp-painel.ativo {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0);
+  transition:
+    opacity 0.45s ease 0.12s,
+    transform 0.65s var(--gp-ease) 0.12s,
+    visibility 0s;
+}
+
+/* Conteúdo do painel entra em sequência */
+#c6 .gp-painel > * {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+#c6 .gp-painel.ativo > * {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.5s ease, transform 0.6s var(--gp-ease);
+}
+
+#c6 .gp-painel.ativo > *:nth-child(1) { transition-delay: 0.18s; }
+#c6 .gp-painel.ativo > *:nth-child(2) { transition-delay: 0.25s; }
+#c6 .gp-painel.ativo > *:nth-child(3) { transition-delay: 0.32s; }
+#c6 .gp-painel.ativo > *:nth-child(4) { transition-delay: 0.39s; }
+#c6 .gp-painel.ativo > *:nth-child(5) { transition-delay: 0.46s; }
+
+#c6 .gp-painel h4 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--roxo-escuro);
+  margin-bottom: 12px;
+}
+
+#c6 .gp-painel h5 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--roxo-veloz);
+  margin: 14px 0 4px;
+}
+
+#c6 .gp-painel p {
+  font-size: 14px;
+  line-height: 1.65;
+  color: #444;
+  max-width: 62ch;
+}
+
+#c6 .gp-destaque {
+  margin-top: 16px;
+  padding: 12px 14px;
+  background: #fff;
+  border-left: 3px solid var(--roxo-veloz);
+  border-radius: 0 8px 8px 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: #555;
+}
+
+#c6 .gp-cartoes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+#c6 .gp-cartao {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: #fff;
+  border: 1px solid #e1d4e8;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+#c6 .gp-cartao strong {
+  font-size: 13px;
+  color: var(--roxo-veloz);
+}
+
+#c6 .gp-cartao span {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: #555;
+}
+
+/* Passos numerados (só onde há uma sequência de verdade) */
+#c6 .gp-passos {
+  list-style: none;
+  counter-reset: gp-passo;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#c6 .gp-passos li {
+  counter-increment: gp-passo;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: #444;
+}
+
+#c6 .gp-passos li::before {
+  content: counter(gp-passo);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--roxo-veloz);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+#c6 .gp-botao {
+  margin-top: 16px;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  background: var(--roxo-veloz);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s var(--gp-ease);
+}
+
+#c6 .gp-botao:hover {
+  background: var(--roxo-medio);
+  transform: translateY(-2px);
+}
+
+#c6 .gp-botao:focus-visible {
+  outline: 2px solid var(--roxo-claro);
+  outline-offset: 2px;
+}
+
+
+/* ---------- CELULAR ---------- */
+
+@media (max-width: 768px) {
+  #c6 .gp {
+    padding: 16px;
+  }
+
+  #c6 .gp-corpo {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  /* Sem seta deslizante: o próprio item fica roxo */
+  #c6 .gp-indicador {
+    display: none;
+  }
+
+  #c6 .gp-item {
+    border-radius: 8px;
+    padding-right: 16px;
+    font-size: 14px;
+  }
+
+  #c6 .gp-item.ativo,
+  #c6 .gp-item.ativo:hover {
+    background: var(--roxo-veloz);
+  }
+
+  #c6 .gp-paineis {
+    border-radius: 12px;
+    padding: 20px 18px;
+  }
+
+  #c6 .gp-cartoes {
+    grid-template-columns: 1fr;
+  }
+
+  /* Só o painel ativo ocupa espaço (sem sobra de altura) */
+  #c6 .gp-painel:not(.ativo) {
+    display: none;
+  }
+
+  #c6 .gp-painel.ativo {
+    animation: gpEntra 0.55s var(--gp-ease);
+  }
+}
+
+@keyframes gpEntra {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+
+/* ---------- MOVIMENTO REDUZIDO ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  #c6 .gp-indicador,
+  #c6 .gp-item,
+  #c6 .gp-painel,
+  #c6 .gp-painel > * {
+    transition-duration: 0.01s !important;
+    transition-delay: 0s !important;
+  }
+}
+        </style>
+
+<script>
+  /* ============================================================
+   C6 - GUIA DE PINTURA
+   Cole no final do produt.js (ou dentro de um <script> no fim do body)
+============================================================ */
+(function () {
+  const raiz = document.getElementById('c6');
+  if (!raiz) return;
+
+  const nav = raiz.querySelector('.gp-nav');
+  const indicador = raiz.querySelector('.gp-indicador');
+  const itens = Array.from(raiz.querySelectorAll('.gp-item'));
+  const paineis = Array.from(raiz.querySelectorAll('.gp-painel'));
+  const areaPaineis = raiz.querySelector('.gp-paineis');
+  const celular = window.matchMedia('(max-width: 768px)');
+
+  // Move o bloco roxo (com a seta) até o tópico ativo
+  function posicionar(semAnimacao) {
+    const ativo = nav.querySelector('.gp-item.ativo');
+    if (!ativo || !nav.offsetHeight) return; // aba ainda escondida
+    if (getComputedStyle(indicador).display === 'none') return; // celular
+
+    const topoNav = nav.getBoundingClientRect().top;
+    const caixa = ativo.getBoundingClientRect();
+
+    if (semAnimacao) indicador.style.transition = 'none';
+    indicador.style.height = caixa.height + 'px';
+    indicador.style.transform = 'translateY(' + (caixa.top - topoNav) + 'px)';
+
+    if (semAnimacao) {
+      void indicador.offsetHeight; // força aplicar antes de religar a animação
+      indicador.style.transition = '';
+    }
+    indicador.classList.add('visivel');
+  }
+
+  function selecionar(item, veioDoUsuario) {
+    itens.forEach(function (b) {
+      const ligado = b === item;
+      b.classList.toggle('ativo', ligado);
+      b.setAttribute('aria-selected', ligado ? 'true' : 'false');
+      b.tabIndex = ligado ? 0 : -1;
+    });
+
+    paineis.forEach(function (p) {
+      p.classList.toggle('ativo', p.id === item.dataset.gp);
+    });
+
+    posicionar(false);
+
+    // No celular o texto fica abaixo da lista: leva a tela até ele
+    if (veioDoUsuario && celular.matches) {
+      areaPaineis.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  itens.forEach(function (item) {
+    item.addEventListener('click', function () {
+      selecionar(item, true);
+    });
+  });
+
+  // Setas do teclado: cima/baixo trocam de tópico
+  nav.addEventListener('keydown', function (e) {
+    if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+    e.preventDefault();
+    const atual = itens.findIndex(function (b) { return b.classList.contains('ativo'); });
+    const proximo = e.key === 'ArrowDown'
+      ? Math.min(atual + 1, itens.length - 1)
+      : Math.max(atual - 1, 0);
+    selecionar(itens[proximo], false);
+    itens[proximo].focus();
+  });
+
+  // Botões que levam para outra aba (ex.: "Abrir a FDS")
+  raiz.querySelectorAll('[data-ir]').forEach(function (el) {
+    el.addEventListener('click', function () {
+      const botaoAba = document.querySelector('.opcoes button[data-target="' + el.dataset.ir + '"]');
+      if (botaoAba) botaoAba.click();
+    });
+  });
+
+  // Reposiciona sem animar quando a aba abre, a tela muda de tamanho ou a fonte carrega
+  if ('ResizeObserver' in window) {
+    new ResizeObserver(function () { posicionar(true); }).observe(nav);
+  } else {
+    window.addEventListener('resize', function () { posicionar(true); });
+    document.querySelectorAll('.opcoes button').forEach(function (b) {
+      b.addEventListener('click', function () { setTimeout(function () { posicionar(true); }, 50); });
+    });
+  }
+
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function () { posicionar(true); });
+  }
+
+  posicionar(true);
+})();
+</script>
+      </div>
+    </div>
+  </div>
+</div>
 
 
         </div>

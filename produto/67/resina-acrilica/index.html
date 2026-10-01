@@ -83,6 +83,7 @@
           <button class="ativo" data-target="c1">Especificações Técnicas</button>
           <button data-target="c3">Boletim Técnico</button>
           <button data-target="c4">FDS</button>
+          <button data-target="c5">Calculadora de Tinta</button>
         </div>
 
       
@@ -225,7 +226,263 @@ Resina acrílica à base de monômero de estireno e solventes aromáticos e alif
     allow="autoplay">
   </iframe>
 </div>
+<div id="c5" class="conteudo">
 
+  <div class="calc-container">
+
+    <h3 class="calc-title">Calculadora Resina Acrílica</h3>
+
+    <p class="calc-subtitle">
+      Com esta ferramenta, você calcula a quantidade exata de Resina Acrílica necessária para a sua aplicação.
+    </p>
+
+    <!-- DADOS PRINCIPAIS -->
+    <div class="calc-grid">
+
+      <div class="calc-group">
+        <label for="calcLargura">
+          Largura linear (m)
+        </label>
+
+        <input
+          type="number"
+          id="calcLargura"
+          min="0"
+          step="0.01"
+          placeholder="Ex.: 12"
+        >
+      </div>
+
+      <div class="calc-group">
+        <label for="calcAltura">
+          Altura (m)
+        </label>
+
+        <input
+          type="number"
+          id="calcAltura"
+          min="0"
+          step="0.01"
+          placeholder="Ex.: 2,80"
+        >
+      </div>
+
+      <div class="calc-group">
+        <label for="calcAcabamento">
+          Acabamento
+        </label>
+
+        <input
+          type="text"
+          id="calcAcabamento"
+          value="Brilho"
+          readonly
+        >
+      </div>
+
+    </div>
+
+    <!-- BOTÃO -->
+    <button
+      type="button"
+      id="btnCalcular"
+      class="btn-calcular"
+    >
+      Calcular quantidade
+    </button>
+
+    <!-- RESULTADO -->
+    <div
+      id="calcResultado"
+      class="calc-resultado"
+      style="display:none;"
+    ></div>
+
+  </div>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+  // ============================================================
+  // CONFIGURAÇÃO
+  // ============================================================
+
+  const numeroDemaos = 3;
+
+  // ============================================================
+  // EMBALAGENS E RENDIMENTOS (JÁ CONSIDERANDO AS 3 DEMÃOS)
+  // ============================================================
+
+  const embalagensTinta = [
+    { volume: 18.0, rendimento: 92.0, nome: 'Lata de 18 Litros' },
+    { volume: 5.0,  rendimento: 25.0, nome: 'Lata de 5 Litros' }
+  ];
+
+  // ============================================================
+  // TROCA DE ABAS
+  // ============================================================
+
+  const botoesOpcoes = document.querySelectorAll('.opcoes button');
+  const conteudos = document.querySelectorAll('.conteudo');
+
+  botoesOpcoes.forEach(botao => {
+    botao.addEventListener('click', () => {
+      const targetId = botao.getAttribute('data-target');
+
+      botoesOpcoes.forEach(b => b.classList.remove('ativo'));
+      conteudos.forEach(c => c.classList.remove('ativo'));
+
+      botao.classList.add('ativo');
+      const targetConteudo = document.getElementById(targetId);
+
+      if (targetConteudo) {
+        targetConteudo.classList.add('ativo');
+      }
+    });
+  });
+
+  // ============================================================
+  // CALCULAR COMBINAÇÃO IDEAL DE EMBALAGENS (18L / 5L)
+  // ============================================================
+
+  function calcularEmbalagens(area) {
+    const emb18 = embalagensTinta.find(e => e.volume === 18.0);
+    const emb5  = embalagensTinta.find(e => e.volume === 5.0);
+
+    let melhorOpcao = null;
+
+    const max18 = Math.ceil(area / emb18.rendimento) + 1;
+
+    for (let q18 = 0; q18 <= max18; q18++) {
+      const area18 = q18 * emb18.rendimento;
+      const rest = Math.max(0, area - area18);
+
+      const q5 = rest > 0 ? Math.ceil(rest / emb5.rendimento) : 0;
+      const areaCoberta = area18 + (q5 * emb5.rendimento);
+
+      if (areaCoberta < area) continue;
+
+      const volumeTotal = (q18 * emb18.volume) + (q5 * emb5.volume);
+      const qtdTotal = q18 + q5;
+
+      const opcao = { q18, q5, volumeTotal, qtdTotal, areaCoberta };
+
+      if (!melhorOpcao) {
+        melhorOpcao = opcao;
+        continue;
+      }
+
+      if (opcao.volumeTotal < melhorOpcao.volumeTotal) {
+        melhorOpcao = opcao;
+      } else if (opcao.volumeTotal === melhorOpcao.volumeTotal) {
+        if (opcao.qtdTotal < melhorOpcao.qtdTotal) {
+          melhorOpcao = opcao;
+        }
+      }
+    }
+
+    return melhorOpcao;
+  }
+
+  // ============================================================
+  // BOTÃO CALCULAR
+  // ============================================================
+
+  const btnCalcular = document.getElementById('btnCalcular');
+  if (!btnCalcular) return;
+
+  btnCalcular.addEventListener('click', () => {
+    const larguraLinear = parseFloat(document.getElementById('calcLargura').value) || 0;
+    const altura = parseFloat(document.getElementById('calcAltura').value) || 0;
+
+    if (larguraLinear <= 0 || altura <= 0) {
+      alert('Por favor, informe a largura linear total e a altura.');
+      return;
+    }
+
+    // ÁREA TOTAL
+    const areaUtil = larguraLinear * altura;
+
+    // RESINA
+    const resultadoResina = calcularEmbalagens(areaUtil);
+
+    if (!resultadoResina) {
+      alert('Não foi possível calcular a quantidade de resina acrílica.');
+      return;
+    }
+
+    const volResina = resultadoResina.volumeTotal;
+
+    // HTML DOS ITENS
+    let resinaHTML = '';
+
+    if (resultadoResina.q18 > 0) {
+      const texto = resultadoResina.q18 === 1 ? '1 Lata de 18 Litros' : `${resultadoResina.q18} Latas de 18 Litros`;
+      resinaHTML += `
+        <div class="calc-tinta-item">
+          <strong>${texto}</strong>
+          <small>Resina Acrílica (Brilho)</small>
+        </div>
+      `;
+    }
+
+    if (resultadoResina.q5 > 0) {
+      const texto = resultadoResina.q5 === 1 ? '1 Lata de 5 Litros' : `${resultadoResina.q5} Latas de 5 Litros`;
+      resinaHTML += `
+        <div class="calc-tinta-item">
+          <strong>${texto}</strong>
+          <small>Resina Acrílica (Brilho)</small>
+        </div>
+      `;
+    }
+
+    // EXIBIR RESULTADO
+    const containerResultado = document.getElementById('calcResultado');
+    containerResultado.style.display = 'block';
+
+    containerResultado.innerHTML = `
+      <!-- RESUMO -->
+      <div class="calc-res-grid">
+        <div class="calc-card-stat">
+          <small>Área para aplicar</small>
+          <strong>${areaUtil.toFixed(1)} m²</strong>
+        </div>
+        <div class="calc-card-stat">
+          <small>Demãos</small>
+          <strong>${numeroDemaos}</strong>
+        </div>
+        <div class="calc-card-stat">
+          <small>Acabamento</small>
+          <strong>Brilho</strong>
+        </div>
+      </div>
+
+      <!-- DESTAQUE PRINCIPAL -->
+      <section class="calc-tinta-destaque">
+        <div class="calc-destaque-topo">
+          <div>
+            <span class="calc-destaque-label">PRODUTO PRINCIPAL</span>
+            <h4>Resina Acrílica</h4>
+            <p>Quantidade recomendada para a área calculada (${volResina.toFixed(1).replace('.', ',')} Litros no total).</p>
+          </div>
+        </div>
+        <div class="calc-tinta-lista">
+          ${resinaHTML}
+        </div>
+      </section>
+    `;
+
+    setTimeout(() => {
+      containerResultado.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest'
+      });
+    }, 100);
+  });
+});
+</script>
 
 
       </div>

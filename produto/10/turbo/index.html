@@ -83,6 +83,7 @@
             <button data-target="c1">Especificações Técnicas</button>
             <button data-target="c3">Boletim Técnico</button>
             <button data-target="c4">FDS</button>
+            <button data-target="c5">Calculadora de Tinta</button>
           </div>
 
           <!-- ESPECIFICAÇÕES TÉCNICAS -->
@@ -305,6 +306,586 @@
             <iframe src="https://drive.google.com/file/d/1z_XKkLSoIvaVIjW_hu7HG9k1TpOpYUTE/preview" allow="autoplay"></iframe>
 
                 </div>
+
+
+<div id="c5" class="conteudo">
+  <div class="calc-container">
+    <h3 class="calc-title">Calculadora Tinta Turbo Fosco</h3>
+
+    <p class="calc-subtitle">
+      Com esta ferramenta, você consegue calcular a quantidade de tinta necessária em m² para cada cômodo, considerando a metragem linear de todas as paredes e a altura do pé-direito.
+    </p>
+
+    <!-- DADOS PRINCIPAIS -->
+    <div class="calc-grid">
+      <div class="calc-group">
+        <label for="calcLargura">Largura linear (m)</label>
+        <input
+          type="number"
+          id="calcLargura"
+          min="0"
+          step="0.01"
+          placeholder="Ex.: 12"
+        >
+      </div>
+
+      <div class="calc-group">
+        <label for="calcAltura">Altura (m)</label>
+        <input
+          type="number"
+          id="calcAltura"
+          min="0"
+          step="0.01"
+          placeholder="Ex.: 2,80"
+        >
+      </div>
+
+      <div class="calc-group">
+        <label for="calcAcabamento">Acabamento</label>
+        <input
+          type="text"
+          id="calcAcabamento"
+          value="Fosco"
+          readonly
+          style="background-color: #f5f5f5; cursor: not-allowed;"
+        >
+      </div>
+    </div>
+
+    <!-- DESCONTOS -->
+    <div class="calc-toggle-descontos">
+      <label class="checkbox-container">
+        <input type="checkbox" id="chkDescontos">
+        <span>Descontar portas e janelas</span>
+      </label>
+    </div>
+
+    <!-- ÁREA DE DESCONTOS -->
+    <div id="boxDescontos" class="calc-descontos-box" style="display:none;">
+      <!-- PORTAS -->
+      <div class="desconto-section">
+        <div class="desconto-section-header">
+          <div>
+            <h4>Portas</h4>
+            <span>Adicione as portas que não serão pintadas.</span>
+          </div>
+          <button type="button" id="btnAdicionarPorta" class="btn-adicionar-item">+ Adicionar porta</button>
+        </div>
+        <div id="listaPortas" class="desconto-lista"></div>
+      </div>
+
+      <!-- JANELAS -->
+      <div class="desconto-section">
+        <div class="desconto-section-header">
+          <div>
+            <h4>Janelas</h4>
+            <span>Adicione as janelas que não serão pintadas.</span>
+          </div>
+          <button type="button" id="btnAdicionarJanela" class="btn-adicionar-item">+ Adicionar janela</button>
+        </div>
+        <div id="listaJanelas" class="desconto-lista"></div>
+      </div>
+    </div>
+
+    <!-- BOTÃO -->
+    <button type="button" id="btnCalcular" class="btn-calcular">Calcular quantidade</button>
+
+    <!-- RESULTADO -->
+    <div id="calcResultado" class="calc-resultado" style="display:none;"></div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+  const numeroDemaos = 3;
+
+  // Produto exclusivo: Tinta Turbo Fosco
+  const produtoTurbo = {
+    nome: 'Tinta Turbo Fosco',
+    embalagens: [
+      { volume: 18, rendimento: 133, nome: 'Balde de 18 Litros' },
+      { volume: 3.6, rendimento: 27, nome: 'Galão de 3,6 Litros' }
+    ]
+  };
+
+  // ============================================================
+  // MASSAS
+  // ============================================================
+  const massas = {
+    pva: {
+      nome: 'Massa PVA',
+      embalagens: [
+        { peso: 25, rendimento: 57, nome: 'Balde de 25 kg' },
+        { peso: 20, rendimento: 44, nome: 'Balde de 20 kg' },
+        { peso: 6, rendimento: 13, nome: 'Balde de 6 kg' }
+      ]
+    },
+    acrilica: {
+      nome: 'Massa Acrílica',
+      embalagens: [
+        { peso: 25, rendimento: 57, nome: 'Balde de 25 kg' },
+        { peso: 20, rendimento: 44, nome: 'Balde de 20 kg' },
+        { peso: 6, rendimento: 13, nome: 'Balde de 6 kg' }
+      ]
+    }
+  };
+
+  // ============================================================
+  // SELADORES
+  // ============================================================
+  const seladores = {
+    incolor: {
+      nome: "Selador Acrílico Incolor",
+      embalagens: [
+        { litros: 15, rendimento: 54 },
+        { litros: 3.6, rendimento: 13 }
+      ]
+    },
+    acrilicoPigmentado: {
+      nome: "Selador Acrílico Pigmentado",
+      embalagens: [
+        { litros: 15, rendimento: 54 },
+        { litros: 3.6, rendimento: 13 }
+      ]
+    },
+    pvaPigmentadoReboco: {
+      nome: "Selador PVA Pigmentado — Reboco",
+      embalagens: [
+        { litros: 15, rendimento: 83 },
+        { litros: 3.6, rendimento: 20 }
+      ]
+    },
+    pvaPigmentadoBloco: {
+      nome: "Selador PVA Pigmentado — Bloco",
+      embalagens: [
+        { litros: 15, rendimento: 58 },
+        { litros: 3.6, rendimento: 14 }
+      ]
+    }
+  };
+
+  // ============================================================
+  // ELEMENTOS E EVENTOS DE DESCONTO
+  // ============================================================
+  const chkDescontos = document.getElementById('chkDescontos');
+  const boxDescontos = document.getElementById('boxDescontos');
+  const listaPortas = document.getElementById('listaPortas');
+  const listaJanelas = document.getElementById('listaJanelas');
+  const btnAdicionarPorta = document.getElementById('btnAdicionarPorta');
+  const btnAdicionarJanela = document.getElementById('btnAdicionarJanela');
+
+  function criarItem(tipo) {
+    const nome = tipo === 'porta' ? 'Porta' : 'Janela';
+    const item = document.createElement('div');
+    item.className = `desconto-item desconto-${tipo}`;
+
+    item.innerHTML = `
+      <div class="desconto-item-header">
+        <strong>${nome}</strong>
+        <button type="button" class="btn-remover-item" title="Remover">×</button>
+      </div>
+      <div class="desconto-item-grid">
+        <div class="calc-group">
+          <label>Largura (m)</label>
+          <input type="number" class="desconto-largura" min="0" step="0.01" placeholder="Ex.: 0,80">
+        </div>
+        <div class="calc-group">
+          <label>Altura (m)</label>
+          <input type="number" class="desconto-altura" min="0" step="0.01" placeholder="Ex.: 2,10">
+        </div>
+      </div>
+    `;
+
+    item.querySelector('.btn-remover-item').addEventListener('click', () => item.remove());
+    return item;
+  }
+
+  if (btnAdicionarPorta) {
+    btnAdicionarPorta.addEventListener('click', () => {
+      listaPortas.appendChild(criarItem('porta'));
+    });
+  }
+
+  if (btnAdicionarJanela) {
+    btnAdicionarJanela.addEventListener('click', () => {
+      listaJanelas.appendChild(criarItem('janela'));
+    });
+  }
+
+  if (chkDescontos && boxDescontos) {
+    chkDescontos.addEventListener('change', () => {
+      boxDescontos.style.display = chkDescontos.checked ? 'block' : 'none';
+
+      if (chkDescontos.checked && listaPortas.children.length === 0) {
+        listaPortas.appendChild(criarItem('porta'));
+      }
+      if (chkDescontos.checked && listaJanelas.children.length === 0) {
+        listaJanelas.appendChild(criarItem('janela'));
+      }
+    });
+  }
+
+  // ============================================================
+  // CÁLCULOS LOGÍSTICOS
+  // ============================================================
+  function calcularEmbalagens(area, embalagens) {
+    const embalagem18 = embalagens.find(e => e.volume === 18);
+    const embalagem36 = embalagens.find(e => e.volume === 3.6);
+
+    if (!embalagem18 || !embalagem36) return null;
+
+    let melhorOpcao = null;
+    const maxLatoes = Math.ceil(area / embalagem18.rendimento) + 1;
+
+    for (let latoes = 0; latoes <= maxLatoes; latoes++) {
+      const areaDosLatoes = latoes * embalagem18.rendimento;
+      const areaRestante = Math.max(0, area - areaDosLatoes);
+
+      const latas = areaRestante > 0 
+        ? Math.ceil(areaRestante / embalagem36.rendimento) 
+        : 0;
+
+      const areaCoberta = areaDosLatoes + (latas * embalagem36.rendimento);
+      const volumeTotal = (latoes * embalagem18.volume) + (latas * embalagem36.volume);
+      const quantidadeEmbalagens = latoes + latas;
+
+      if (areaCoberta < area) continue;
+
+      const opcao = { latoes, latas, volumeTotal, quantidadeEmbalagens, areaCoberta };
+
+      if (!melhorOpcao) {
+        melhorOpcao = opcao;
+        continue;
+      }
+
+      if (opcao.volumeTotal < melhorOpcao.volumeTotal) {
+        melhorOpcao = opcao;
+      } else if (opcao.volumeTotal === melhorOpcao.volumeTotal) {
+        if (opcao.quantidadeEmbalagens < melhorOpcao.quantidadeEmbalagens) {
+          melhorOpcao = opcao;
+        } else if (opcao.quantidadeEmbalagens === melhorOpcao.quantidadeEmbalagens && opcao.latoes > melhorOpcao.latoes) {
+          melhorOpcao = opcao;
+        }
+      }
+    }
+
+    return melhorOpcao;
+  }
+
+  function calcularMassa(area, produto) {
+    let melhorOpcao = null;
+    const embalagemMaior = produto.embalagens.reduce((maior, atual) => atual.peso > maior.peso ? atual : maior);
+    const maxMaior = Math.ceil(area / embalagemMaior.rendimento) + 1;
+
+    for (let qtdMaior = 0; qtdMaior <= maxMaior; qtdMaior++) {
+      const areaMaior = qtdMaior * embalagemMaior.rendimento;
+      const areaRestante = Math.max(0, area - areaMaior);
+      const menores = produto.embalagens.filter(e => e !== embalagemMaior).sort((a, b) => a.rendimento - b.rendimento);
+
+      let quantidadeMenores = 0;
+      let areaCoberta = areaMaior;
+      let pesoMenores = 0;
+
+      if (areaRestante > 0) {
+        const menor = menores[0];
+        quantidadeMenores = Math.ceil(areaRestante / menor.rendimento);
+        areaCoberta += quantidadeMenores * menor.rendimento;
+        pesoMenores = quantidadeMenores * menor.peso;
+      }
+
+      if (areaCoberta < area) continue;
+
+      const pesoTotal = qtdMaior * embalagemMaior.peso + pesoMenores;
+      const quantidade = qtdMaior + quantidadeMenores;
+
+      const opcao = {
+        quantidade,
+        pesoTotal,
+        areaCoberta,
+        embalagem: qtdMaior > 0 ? embalagemMaior : menores[0],
+        composicao: {
+          maior: qtdMaior,
+          menor: quantidadeMenores,
+          menorEmbalagem: menores[0]
+        }
+      };
+
+      if (!melhorOpcao) {
+        melhorOpcao = opcao;
+        continue;
+      }
+
+      if (opcao.pesoTotal < melhorOpcao.pesoTotal) {
+        melhorOpcao = opcao;
+      } else if (opcao.pesoTotal === melhorOpcao.pesoTotal && opcao.areaCoberta < melhorOpcao.areaCoberta) {
+        melhorOpcao = opcao;
+      }
+    }
+
+    return melhorOpcao;
+  }
+
+  function calcularSelador(area, embalagens) {
+    let melhorOpcao = null;
+    const embalagemMaior = embalagens.reduce((maior, atual) => atual.litros > maior.litros ? atual : maior);
+    const embalagemMenor = embalagens.reduce((menor, atual) => atual.litros < menor.litros ? atual : menor);
+    const maxMaior = Math.ceil(area / embalagemMaior.rendimento) + 1;
+
+    for (let qtdMaior = 0; qtdMaior <= maxMaior; qtdMaior++) {
+      const areaMaior = qtdMaior * embalagemMaior.rendimento;
+      const areaRestante = Math.max(0, area - areaMaior);
+
+      const qtdMenor = areaRestante > 0 
+        ? Math.ceil(areaRestante / embalagemMenor.rendimento) 
+        : 0;
+
+      const areaCoberta = areaMaior + qtdMenor * embalagemMenor.rendimento;
+
+      if (areaCoberta < area) continue;
+
+      const volumeTotal = qtdMaior * embalagemMaior.litros + qtdMenor * embalagemMenor.litros;
+      const quantidadeEmbalagens = qtdMaior + qtdMenor;
+
+      const opcao = {
+        quantidade: quantidadeEmbalagens,
+        volumeTotal,
+        areaCoberta,
+        embalagem: qtdMaior > 0 ? embalagemMaior : embalagemMenor,
+        composicao: {
+          maior: qtdMaior,
+          menor: qtdMenor,
+          embalagemMaior,
+          embalagemMenor
+        }
+      };
+
+      if (!melhorOpcao) {
+        melhorOpcao = opcao;
+        continue;
+      }
+
+      if (opcao.volumeTotal < melhorOpcao.volumeTotal) {
+        melhorOpcao = opcao;
+      } else if (opcao.volumeTotal === melhorOpcao.volumeTotal && opcao.areaCoberta < melhorOpcao.areaCoberta) {
+        melhorOpcao = opcao;
+      }
+    }
+
+    return melhorOpcao;
+  }
+
+  // ============================================================
+  // FORMATADORES E AUXILIARES
+  // ============================================================
+  function formatarQuantidadeMassa(resultado) {
+    if (!resultado || !resultado.composicao) return '';
+    const { maior, menor, menorEmbalagem } = resultado.composicao;
+    const maiorEmbalagem = resultado.embalagem;
+    const partes = [];
+
+    if (maior > 0) partes.push(`${maior} ${maiorEmbalagem.nome}`);
+    if (menor > 0) partes.push(`${menor} ${menorEmbalagem.nome}`);
+
+    return partes.join(' + ');
+  }
+
+  function formatarQuantidadeSelador(resultado) {
+    if (!resultado || !resultado.composicao) return '';
+    const { maior, menor, embalagemMaior, embalagemMenor } = resultado.composicao;
+    const partes = [];
+
+    if (maior > 0) {
+      const unidade = maior === 1 ? 'Balde' : 'Baldes';
+      partes.push(`${maior} ${unidade} de ${String(embalagemMaior.litros).replace('.', ',')} Litros`);
+    }
+
+    if (menor > 0) {
+      const unidade = menor === 1 ? 'Galão' : 'Galões';
+      partes.push(`${menor} ${unidade} de ${String(embalagemMenor.litros).replace('.', ',')} Litros`);
+    }
+
+    return partes.join(' + ');
+  }
+
+  function calcularAreaDescontos(lista) {
+    let total = 0;
+    lista.forEach(item => {
+      const largura = parseFloat(item.querySelector('.desconto-largura').value) || 0;
+      const altura = parseFloat(item.querySelector('.desconto-altura').value) || 0;
+      total += largura * altura;
+    });
+    return total;
+  }
+
+  // ============================================================
+  // BOTÃO CALCULAR
+  // ============================================================
+  const btnCalcular = document.getElementById('btnCalcular');
+  if (!btnCalcular) return;
+
+  btnCalcular.addEventListener('click', () => {
+    const larguraLinear = parseFloat(document.getElementById('calcLargura').value) || 0;
+    const altura = parseFloat(document.getElementById('calcAltura').value) || 0;
+
+    if (larguraLinear <= 0 || altura <= 0) {
+      alert('Por favor, informe a largura linear total e a altura.');
+      return;
+    }
+
+    const areaBruta = larguraLinear * altura;
+    let areaPortas = 0;
+    let areaJanelas = 0;
+
+    if (chkDescontos && chkDescontos.checked) {
+      areaPortas = calcularAreaDescontos(Array.from(document.querySelectorAll('.desconto-porta')));
+      areaJanelas = calcularAreaDescontos(Array.from(document.querySelectorAll('.desconto-janela')));
+    }
+
+    const areaDescontos = areaPortas + areaJanelas;
+    const areaUtil = Math.max(0, areaBruta - areaDescontos);
+
+    if (areaUtil <= 0) {
+      alert('A área para pintura ficou igual ou menor que zero. Verifique as medidas informadas.');
+      return;
+    }
+
+    const resultadoTinta = calcularEmbalagens(areaUtil, produtoTurbo.embalagens);
+    if (!resultadoTinta) {
+      alert('Não foi possível calcular a quantidade de tinta.');
+      return;
+    }
+
+    const resultadoMassaPVA = calcularMassa(areaUtil, massas.pva);
+    const resultadoMassaAcrilica = calcularMassa(areaUtil, massas.acrilica);
+
+    const resultadoIncolor = calcularSelador(areaUtil, seladores.incolor.embalagens);
+    const resultadoAcrilicoPigmentado = calcularSelador(areaUtil, seladores.acrilicoPigmentado.embalagens);
+    const resultadoPVAPigmentadoReboco = calcularSelador(areaUtil, seladores.pvaPigmentadoReboco.embalagens);
+    const resultadoPVAPigmentadoBloco = calcularSelador(areaUtil, seladores.pvaPigmentadoBloco.embalagens);
+
+    let tintaHTML = '';
+
+    if (resultadoTinta.latoes > 0) {
+      const texto = resultadoTinta.latoes === 1 ? '1 Balde de 18 Litros' : `${resultadoTinta.latoes} Baldes de 18 Litros`;
+      tintaHTML += `
+        <div class="calc-tinta-item">
+          <strong>${texto}</strong>
+          <small>${produtoTurbo.nome}</small>
+        </div>
+      `;
+    }
+
+    if (resultadoTinta.latas > 0) {
+      const texto = resultadoTinta.latas === 1 ? '1 Galão de 3,6 Litros' : `${resultadoTinta.latas} Galões de 3,6 Litros`;
+      tintaHTML += `
+        <div class="calc-tinta-item">
+          <strong>${texto}</strong>
+          <small>Complemento da quantidade necessária</small>
+        </div>
+      `;
+    }
+
+    const containerResultado = document.getElementById('calcResultado');
+    containerResultado.style.display = 'block';
+
+    containerResultado.innerHTML = `
+      <!-- RESUMO -->
+      <div class="calc-res-grid">
+        <div class="calc-card-stat">
+          <small>Área para pintar</small>
+          <strong>${areaUtil.toFixed(1)} m²</strong>
+        </div>
+        <div class="calc-card-stat">
+          <small>Demãos</small>
+          <strong>${numeroDemaos}</strong>
+        </div>
+        <div class="calc-card-stat">
+          <small>Acabamento</small>
+          <strong>${produtoTurbo.nome}</strong>
+        </div>
+      </div>
+
+      <!-- TINTA PRINCIPAL -->
+      <section class="calc-tinta-destaque">
+        <div class="calc-destaque-topo">
+          <div>
+            <span class="calc-destaque-label">PRODUTO PRINCIPAL</span>
+            <h4>${produtoTurbo.nome}</h4>
+            <p>Quantidade recomendada para a área calculada (3 demãos).</p>
+          </div>
+        </div>
+        <div class="calc-tinta-lista">
+          ${tintaHTML}
+        </div>
+      </section>
+
+      <!-- OUTROS PRODUTOS -->
+      <div class="calc-outros-produtos">
+        <!-- MASSA -->
+        <section class="calc-insumo-box">
+          <div class="calc-insumo-header">
+            <div>
+              <span>PREPARAÇÃO</span>
+              <h4>Massa</h4>
+            </div>
+          </div>
+          <div class="calc-produto-linha">
+            <div><strong>Massa PVA</strong></div>
+            <b>${formatarQuantidadeMassa(resultadoMassaPVA)}</b>
+          </div>
+          <div class="calc-produto-linha">
+            <div><strong>Massa Acrílica</strong></div>
+            <b>${formatarQuantidadeMassa(resultadoMassaAcrilica)}</b>
+          </div>
+          <div class="calc-observacao">
+            <strong>Observação:</strong>
+            A quantidade de Massa PVA e Massa Acrílica é a mesma, pois ambas possuem o mesmo rendimento informado.
+          </div>
+        </section>
+
+        <!-- SELADORES -->
+        <section class="calc-insumo-box">
+          <div class="calc-insumo-header">
+            <div>
+              <span>PREPARAÇÃO</span>
+              <h4>Seladores</h4>
+            </div>
+          </div>
+          <div class="calc-produto-linha">
+            <div><strong>Selador Acrílico Incolor</strong></div>
+            <b>${formatarQuantidadeSelador(resultadoIncolor)}</b>
+          </div>
+          <div class="calc-produto-linha">
+            <div><strong>Selador Acrílico Pigmentado</strong></div>
+            <b>${formatarQuantidadeSelador(resultadoAcrilicoPigmentado)}</b>
+          </div>
+          <div class="calc-produto-linha">
+            <div>
+              <strong>Selador PVA Pigmentado — Reboco</strong>
+              <small>Galão de 3,6 L: rende acima de 20 m² em reboco.</small>
+            </div>
+            <b>${formatarQuantidadeSelador(resultadoPVAPigmentadoReboco)}</b>
+          </div>
+          <div class="calc-produto-linha">
+            <div>
+              <strong>Selador PVA Pigmentado — Bloco</strong>
+              <small>Galão de 3,6 L: rende acima de 14 m² em bloco.</small>
+            </div>
+            <b>${formatarQuantidadeSelador(resultadoPVAPigmentadoBloco)}</b>
+          </div>
+        </section>
+      </div>
+    `;
+
+    setTimeout(() => {
+      containerResultado.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 100);
+  });
+});
+</script>
+
+
         </div>
       </div>
     </section>
