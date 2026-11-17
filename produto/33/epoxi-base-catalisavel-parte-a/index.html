@@ -221,14 +221,26 @@
 
   <div class="calc-container">
 
-    <h3 class="calc-title">Calculadora Epóxi Base Água</h3>
+    <h3 class="calc-title">Calculadora Epóxi Base Catalisável (Parte A)</h3>
 
     <p class="calc-subtitle">
-      Com esta ferramenta, você calcula a quantidade exata de Epóxi Base Água e a recomendação de diluição com água potável para a sua pintura.
+      Selecione o tipo de produto, informe as dimensões da área e calcule a quantidade exata de Epóxi (Parte A) e a proporção de Diluente Epóxi Veloz / Catalisador (Parte B).
     </p>
 
     <!-- DADOS PRINCIPAIS -->
     <div class="calc-grid">
+
+      <div class="calc-group">
+        <label for="calcTipoEpoxi">
+          Produto (Parte A)
+        </label>
+
+        <select id="calcTipoEpoxi">
+          <option value="fundo">Fundo Epóxi</option>
+          <option value="esmalte" selected>Esmalte Epóxi</option>
+          <option value="verniz">Verniz Epóxi</option>
+        </select>
+      </div>
 
       <div class="calc-group">
         <label for="calcLargura">
@@ -263,10 +275,8 @@
           Acabamento
         </label>
 
-        <select id="calcAcabamento">
-          <option value="Fosco">Fosco</option>
+        <select id="calcAcabamento" disabled>
           <option value="Brilhante" selected>Brilhante</option>
-          <option value="Acetinado">Acetinado</option>
         </select>
       </div>
 
